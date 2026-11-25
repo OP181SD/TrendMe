@@ -3,7 +3,10 @@ import type { Video } from "./types";
 
 const DAY = 86_400_000;
 const text = (v: Video) => `${v.caption} ${v.transcript} ${v.onScreenText.join(" ")} ${v.hashtags.map((h) => `#${h}`).join(" ")}`.toLowerCase();
-const has = (t: string, words: string[]) => words.some((w) => t.includes(w));
+// Mot entier : « #ad » ne doit pas matcher « #adorable », ni « stop » « nonstop ».
+const esc = (w: string) => w.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const hit = (t: string, w: string) => new RegExp(`(?<![\\p{L}\\p{N}_])${esc(w)}(?![\\p{L}\\p{N}_])`, "u").test(t);
+const has = (t: string, words: string[]) => words.some((w) => hit(t, w));
 
 /** Shadow reach = pub non déclarée : la vidéo vend une marque (dans ce qui est dit ou écrit à l'écran)
  * sans aucune mention de partenariat ni de marque dans la légende et les hashtags. */
@@ -12,18 +15,18 @@ const DISCLOSURE = ["#ad", "#ads", "#pub", "#sponsor", "sponsorisé", "sponsored
 const PROMO = ["code promo", "code ", "lien en bio", "link in bio", "-20", "-30", "-50", "% de réduction", "discount", "j'utilise", "i use", "je vous recommande", "je recommande", "mon produit préféré", "holy grail", "ce produit", "this product", "la marque", "the brand", "disponible", "available at", "sephora", "amazon"];
 export function shadowReach(v: Video): ShadowReach {
   const declared = `${v.caption} ${v.hashtags.map((h) => `#${h}`).join(" ")}`.toLowerCase();
-  if (has(declared + " ", DISCLOSURE)) return "declaree";
+  if (has(declared, DISCLOSURE)) return "declaree";
   const spoken = `${v.transcript} ${v.onScreenText.join(" ")}`.toLowerCase();
   // Marque ou appel à l'achat dans la vidéo, mais rien dans la légende.
   const brandInVideo = /@[a-z0-9_.]{3,}|\b[A-Z][a-z]+ ?(?:Paris|Skin|Beauty|Lab|Cosmetics)\b/.test(`${v.transcript} ${v.onScreenText.join(" ")}`);
-  const promoHits = PROMO.filter((w) => spoken.includes(w)).length;
+  const promoHits = PROMO.filter((w) => hit(spoken, w)).length;
   return promoHits >= 2 || (promoHits >= 1 && brandInVideo) ? "cachee" : "aucune";
 }
 
 export type ContentType = "ads" | "sketch" | "tutoriel" | "avant-apres" | "temoignage" | "ugc";
 export function contentType(v: Video): ContentType {
   const t = text(v);
-  if (has(t, ["#ad ", "#ad\n", "#ads", "#pub", "#sponsor", "sponsorisé", "partenariat", "paid partnership", "code promo", "#collab", "#gifted"]) || / #ad$/.test(t)) return "ads";
+  if (has(t, ["#ad", "#ads", "#pub", "#sponsor", "sponsorisé", "partenariat", "paid partnership", "code promo", "#collab", "#gifted"])) return "ads";
   if (has(t, ["pov", "sketch", "#comedy", "#humour", "#funny", "quand ta", "quand tu", "when your", "😂"])) return "sketch";
   if (has(t, ["avant/après", "avant après", "before after", "before/after", "#beforeandafter", "résultat après", "jours après"])) return "avant-apres";
   if (has(t, ["tuto", "how to", "comment ", "étape", "routine", "step"])) return "tutoriel";
@@ -52,9 +55,10 @@ export function ageGroup(v: Video): AgeGroup {
 
 export type Lang = "fr" | "en" | "es" | "autre";
 export function language(v: Video): Lang {
-  const words = ` ${text(v).replace(/[^\p{L}\s]/gu, " ")} `;
-  const count = (ws: string[]) => ws.reduce((n, w) => n + (words.split(` ${w} `).length - 1), 0);
-  const s = { fr: count(["le", "la", "les", "et", "pour", "avec", "est", "une", "des", "mon", "ma"]), en: count(["the", "and", "for", "with", "is", "my", "this", "you", "your"]), es: count(["el", "los", "con", "para", "es", "mi", "una", "que", "por"]) };
+  const words = text(v).replace(/[^\p{L}]+/gu, " ").split(" ");
+  // Mots propres à chaque langue (« la », « que », « es » existent en français et en espagnol).
+  const count = (ws: string[]) => words.filter((w) => ws.includes(w)).length;
+  const s = { fr: count(["le", "les", "et", "pour", "avec", "est", "une", "des", "mon", "ma", "je", "pas", "du", "vous", "sur", "dans", "ce"]), en: count(["the", "and", "for", "with", "is", "my", "this", "you", "your", "it", "of", "to"]), es: count(["el", "los", "las", "con", "para", "por", "mi", "una", "pero", "muy", "del", "esta"]) };
   const best = (Object.entries(s) as [Lang, number][]).sort((a, b) => b[1] - a[1])[0]!;
   return best[1] >= 2 ? best[0] : "autre";
 }
@@ -81,11 +85,14 @@ export function matches(v: Video, f: Filters, now = Date.now()): boolean {
   if (f.type !== "all" && contentType(v) !== f.type) return false;
   if (f.tone !== "all" && tone(v) !== f.tone) return false;
   if (f.age !== "all" && ageGroup(v) !== f.age) return false;
+  // 0 = inconnu côté Oriane : exclu dès qu'un filtre taille/durée est actif.
   const fo = v.creator.followers;
+  if (f.creatorSize !== "all" && fo <= 0) return false;
   if (f.creatorSize === "nano" && fo >= 10_000) return false;
   if (f.creatorSize === "micro" && (fo < 10_000 || fo >= 100_000)) return false;
   if (f.creatorSize === "macro" && fo < 100_000) return false;
   const d = v.durationSeconds;
+  if (f.duration !== "all" && d <= 0) return false;
   if (f.duration === "short" && d > 15) return false;
   if (f.duration === "medium" && (d <= 15 || d > 45)) return false;
   if (f.duration === "long" && d <= 45) return false;
