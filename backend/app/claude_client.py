@@ -5,7 +5,8 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Callable, TypeVar
+from collections.abc import Callable
+from typing import TypeVar
 
 from anthropic import AsyncAnthropic
 
@@ -39,7 +40,7 @@ def _parse_json(text: str):
     return json.loads(t)
 
 
-async def claude_json(system: str, user: str, validate: Callable[[object], T]) -> T:
+async def claude_json[T](system: str, user: str, validate: Callable[[object], T]) -> T:
     """Appelle Claude et valide le JSON ; une seule nouvelle tentative si invalide."""
     last_err: Exception | None = None
     for attempt in range(2):

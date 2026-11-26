@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install dev api gen test test-front test-back lint format typecheck check smoke build push clean
+.PHONY: help install dev api gen test test-front test-back lint lint-back format typecheck check smoke build push clean
 
 PY := backend/.venv/bin/python
 
@@ -29,8 +29,11 @@ test-front: ## Frontend tests (vitest)
 test-back: ## Backend pure tests
 	$(PY) backend/tests/test_pure.py
 
-lint: ## ESLint
+lint: lint-back ## ESLint (front) + ruff (backend)
 	bun run lint
+
+lint-back: ## Ruff (backend)
+	backend/.venv/bin/ruff check backend
 
 format: ## Prettier write
 	bun run format

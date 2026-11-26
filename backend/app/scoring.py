@@ -6,7 +6,7 @@ and creator = {"followers": int}.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Literal
 
 AttractionTier = Literal["pepite", "breakout", "audience", "inconnu"]
@@ -84,11 +84,11 @@ def score_videos(videos: list[dict]) -> list[dict]:
 
 
 def _now_ms() -> float:
-    return datetime.now(timezone.utc).timestamp() * 1000
+    return datetime.now(UTC).timestamp() * 1000
 
 
 def _published_ms(published_at: str) -> float:
-    return datetime.fromisoformat(published_at.replace("Z", "+00:00")).timestamp() * 1000
+    return datetime.fromisoformat(published_at).timestamp() * 1000
 
 
 def recency_factor(published_at: str, now: float | None = None) -> float:

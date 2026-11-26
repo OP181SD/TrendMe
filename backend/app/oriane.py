@@ -4,10 +4,10 @@ Port of src/lib/oriane.server.ts.
 """
 from __future__ import annotations
 
+import math
 import os
 import re
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 import httpx
 
@@ -29,7 +29,7 @@ def _build_url(r: dict) -> str:
     return ""
 
 
-def normalize_oriane(r: dict) -> Optional[dict]:
+def normalize_oriane(r: dict) -> dict | None:
     """Normalise un résultat Oriane en RawVideo (sans score). None si inexploitable."""
     if r.get("platform") not in ("tiktok", "instagram", "youtube"):
         return None
@@ -40,7 +40,7 @@ def normalize_oriane(r: dict) -> Optional[dict]:
     comments = r.get("commentsCount") or 0
     shares = r.get("sharesCount") or 0
     er = r.get("engagementRatePerViews")
-    provided = isinstance(er, (int, float)) and math_isfinite(er)
+    provided = isinstance(er, (int, float)) and math.isfinite(er)
     media_list = r.get("media") or []
     media = media_list[0] if media_list else {}
     on_screen = [t for t in (media.get("onScreenText") or []) if t]
@@ -54,7 +54,7 @@ def normalize_oriane(r: dict) -> Optional[dict]:
             "name": r.get("profileDisplayName") or r.get("profileHandle") or "Inconnu",
             "followers": r.get("profileFollowersCount") or 0,
         },
-        "publishedAt": r.get("publishedAt") or datetime.now(timezone.utc).isoformat(),
+        "publishedAt": r.get("publishedAt") or datetime.now(UTC).isoformat(),
         "durationSeconds": round(media.get("duration") or 0),
         "views": views,
         "likes": likes,
@@ -70,18 +70,14 @@ def normalize_oriane(r: dict) -> Optional[dict]:
     }
 
 
-def math_isfinite(x: float) -> bool:
-    return x == x and x not in (float("inf"), float("-inf"))
-
-
 _SPLIT = re.compile(r"[,.;:!?()]| au | aux | avec | pour | à base | de \d", re.IGNORECASE)
 
 
 async def search_oriane(
     query: str,
     limit: int,
-    platform: Optional[str] = None,
-    image: Optional[dict] = None,
+    platform: str | None = None,
+    image: dict | None = None,
 ) -> list[dict]:
     base_url = re.sub(r"\s+", "", os.environ.get("ORIANE_API_URL", ""))
     api_key = (os.environ.get("ORIANE_API_KEY") or "").strip()
@@ -94,7 +90,7 @@ async def search_oriane(
         if "." not in host:
             raise ValueError
     except Exception:
-        raise RuntimeError("ORIANE_API_URL n'est pas une adresse valide")
+        raise RuntimeError("ORIANE_API_URL n'est pas une adresse valide") from None
 
     full = query.strip().lower()[:200]
     head = _SPLIT.split(full)[0].strip()
@@ -107,14 +103,17 @@ async def search_oriane(
 
     async with httpx.AsyncClient(timeout=30) as http:
 
-        asset_id: Optional[str] = None
+        asset_id: str | None = None
         if image:
             ok = False
             try:
                 r = await http.post(
                     f"{root}/assets",
                     headers=headers,
-                    json={"type": "image", "image": {"type": "base64", "mediaType": image["mediaType"], "base64": image["base64"]}},
+                    json={
+                        "type": "image",
+                        "image": {"type": "base64", "mediaType": image["mediaType"], "base64": image["base64"]},
+                    },
                 )
                 if r.status_code < 400:
                     asset_id = (r.json().get("data") or {}).get("id")
@@ -126,7 +125,7 @@ async def search_oriane(
             if not ok:
                 raise ImageSearchUnsupported()
 
-        async def fetch_term(term: Optional[str]) -> list[dict]:
+        async def fetch_term(term: str | None) -> list[dict]:
             query_filters = {}
             if term is not None:
                 query_filters = {
@@ -150,7 +149,7 @@ async def search_oriane(
             try:
                 res = await http.post(url, headers=headers, json=body)
             except Exception:
-                raise RuntimeError("Oriane injoignable")
+                raise RuntimeError("Oriane injoignable") from None
             if res.status_code >= 400:
                 raise RuntimeError(f"Oriane a répondu {res.status_code}")
             results = ((res.json().get("data") or {}).get("results")) or []

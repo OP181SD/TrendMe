@@ -4,8 +4,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.scoring import percentile_rank, score_videos, recency_factor, views_momentum
+from datetime import UTC
+
 from app.insights import compute_insights
+from app.scoring import percentile_rank, recency_factor, score_videos, views_momentum
 
 
 def _vid(id, views, eng, followers, platform="tiktok", published="2026-11-20T00:00:00+00:00"):
@@ -36,10 +38,10 @@ def test_score_videos_sorted_and_bounded():
 def test_recency_factor_buckets():
     now = recency_factor.__globals__["_now_ms"]()
     day = 86_400_000
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     def iso(days_ago):
-        return datetime.fromtimestamp((now - days_ago * day) / 1000, timezone.utc).isoformat()
+        return datetime.fromtimestamp((now - days_ago * day) / 1000, UTC).isoformat()
 
     assert recency_factor(iso(3), now) == 1.0
     assert recency_factor(iso(20), now) == 0.8

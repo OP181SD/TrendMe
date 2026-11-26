@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import math
-from typing import Optional
 
 HOOK_LABEL = {
     "question": "hook question",
@@ -33,7 +32,7 @@ def _avg(xs: list[float]) -> float:
     return sum(xs) / len(xs) if xs else 0.0
 
 
-def compute_insights(videos: list[dict], analyses: dict[str, Optional[dict]]) -> dict:
+def compute_insights(videos: list[dict], analyses: dict[str, dict | None]) -> dict:
     """Top = upper half by score (>=1). Hook/format shares over analysed top videos."""
     sorted_v = sorted(videos, key=lambda v: v["score"], reverse=True)
     top_n = max(1, math.ceil(len(sorted_v) / 2))

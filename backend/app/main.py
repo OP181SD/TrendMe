@@ -13,11 +13,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from . import ai_schema
 from .claude_client import claude_json
 from .db import admin
-from typing import Optional
-
 from .models import (
-    Analysis, AnalyzeInput, GeneratedPrompt, GenerateInput, SaveForDemoInput, SaveResult,
-    SearchInput, SearchResult, StoredAnalysisInput,
+    Analysis,
+    AnalyzeInput,
+    GeneratedPrompt,
+    GenerateInput,
+    SaveForDemoInput,
+    SaveResult,
+    SearchInput,
+    SearchResult,
+    StoredAnalysisInput,
 )
 from .oriane import ImageSearchUnsupported, search_oriane
 from .scoring import score_videos
@@ -71,7 +76,9 @@ async def search_videos(data: SearchInput) -> SearchResult:
                      "platform": v["platform"], "score": v["score"], "data": v}
                     for v in videos
                 ]).execute()
-            return SearchResult(videos=videos, source="oriane", imageUsed=image_used, imageUnsupported=image_unsupported)
+            return SearchResult(
+                videos=videos, source="oriane", imageUsed=image_used, imageUnsupported=image_unsupported
+            )
         except Exception as e:
             print("Recherche Oriane échouée:", str(e))
             return SearchResult(videos=[], source="oriane", error="La recherche de vidéos n'a pas abouti.")
@@ -89,7 +96,7 @@ async def search_videos(data: SearchInput) -> SearchResult:
     return SearchResult(videos=score_videos(stored)[: data.limit], source="demo")
 
 
-@app.post("/analyses/stored", operation_id="getStoredAnalysis", response_model=Optional[Analysis])
+@app.post("/analyses/stored", operation_id="getStoredAnalysis", response_model=Analysis | None)
 async def stored_analysis(data: StoredAnalysisInput):
     db = admin()
     res = (db.table("analyses").select("data").eq("video_id", data.videoId)
@@ -155,7 +162,12 @@ async def generate_ad_prompt(data: GenerateInput):
         "marque": p.brand.model_dump(),
         "style": p.style.model_dump(),
         "inspirations": [
-            {"format": a.format, "hook": a.hook.model_dump(), "deroule": list(a.storytelling), "style_visuel": a.visual_style}
+            {
+                "format": a.format,
+                "hook": a.hook.model_dump(),
+                "deroule": list(a.storytelling),
+                "style_visuel": a.visual_style,
+            }
             for a in data.analyses
         ],
     }, ensure_ascii=False, indent=2)

@@ -1,7 +1,8 @@
 """Pydantic types mirroring src/lib/types.ts."""
 from __future__ import annotations
 
-from typing import Literal, Optional
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 Platform = Literal["tiktok", "instagram", "youtube"]
@@ -68,7 +69,7 @@ class Brand(BaseModel):
 class Style(BaseModel):
     format: str
     durationSeconds: int
-    platform: Optional[Platform] = None
+    platform: Platform | None = None
 
 
 class Product(BaseModel):
@@ -76,7 +77,7 @@ class Product(BaseModel):
     name: str
     description: str
     imageUrl: str
-    createdAt: Optional[str] = None
+    createdAt: str | None = None
     brand: Brand
     style: Style
 
@@ -88,18 +89,18 @@ class SearchImage(BaseModel):
 
 class SearchInput(BaseModel):
     query: str = Field(min_length=2, max_length=500)
-    platform: Optional[Platform] = None
+    platform: Platform | None = None
     limit: int = Field(default=5, ge=1, le=10)
-    demo: Optional[bool] = None
-    image: Optional[SearchImage] = None
+    demo: bool | None = None
+    image: SearchImage | None = None
 
 
 class SearchResult(BaseModel):
     videos: list[Video]
     source: Literal["oriane", "demo"]
-    error: Optional[str] = None
-    imageUsed: Optional[bool] = None
-    imageUnsupported: Optional[bool] = None
+    error: str | None = None
+    imageUsed: bool | None = None
+    imageUnsupported: bool | None = None
 
 
 class StoredAnalysisInput(BaseModel):
@@ -161,10 +162,10 @@ class GeneratedPrompt(BaseModel):
     kept: list[str]
     original: list[str]
     scenes: list[PromptScene] = []
-    totalSeconds: Optional[float] = None
+    totalSeconds: float | None = None
     music: str = ""
     cta: str = ""
-    shootingScript: Optional[ShootingScript] = None
+    shootingScript: ShootingScript | None = None
     targetTool: TargetTool
 
 
