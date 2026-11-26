@@ -41,7 +41,8 @@ export default tseslint.config(
           ],
         },
       ],
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      // DX-only (HMR granularity); conflicts with shadcn `cva` variants and icon maps co-located with components.
+      "react-refresh/only-export-components": "off",
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
