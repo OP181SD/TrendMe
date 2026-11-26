@@ -1,10 +1,5 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Folder, Plus, Trash2 } from "lucide-react";
-import { OrbitHero } from "@/components/OrbitHero";
-import { BlurText, FadeContent } from "@/components/reactbits";
-import { Button } from "@/components/ui/button";
-import { deleteProduct, setState, useStore } from "@/lib/store";
-import logoTrendme from "@/assets/logo-trendme.png";
+import { createFileRoute } from "@tanstack/react-router";
+import { DashboardPage } from "@/features/dashboard/DashboardPage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,79 +12,5 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: Dashboard,
+  component: DashboardPage,
 });
-
-function Dashboard() {
-  const s = useStore();
-  const navigate = useNavigate();
-  const allVideos = Object.values(s.videos).flat();
-  return (
-    <div className="relative">
-      <OrbitHero>
-        <img src={logoTrendme} alt="TrendMe" width={1152} height={576} className="mx-auto h-16 w-auto md:h-20" />
-        <BlurText text="Votre espace d'inspiration vidéo" className="mt-4 max-w-xl justify-center text-5xl font-medium leading-[1.02] tracking-tight md:text-7xl" />
-        <FadeContent delay={0.4}>
-          <div className="mt-8 flex items-center justify-center gap-2">
-            <Button asChild size="lg" className="rounded-full"><Link to="/produits">Trouver des inspirations <ArrowRight /></Link></Button>
-            <Button asChild size="lg" variant="ghost" className="rounded-full"><Link to="/top-videos">Mes vidéos</Link></Button>
-          </div>
-        </FadeContent>
-      </OrbitHero>
-      <div className="relative mx-auto max-w-6xl px-6 pb-12 md:px-10">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-          <section>
-            <div className="flex items-end justify-between border-b border-dashed pb-4">
-              <h2 className="text-2xl font-bold">Mes recherches</h2>
-              <Button asChild size="sm" variant="outline" className="rounded-full"><Link to="/produits"><Plus /> Trouver des inspirations</Link></Button>
-            </div>
-            {s.products.length === 0 ? (
-              <p className="mt-6 text-muted-foreground">Rien ici. Lancez votre première recherche.</p>
-            ) : (
-              <ul className="divide-y divide-dashed">
-                {s.products.map((p, i) => (
-                  <FadeContent key={p.id} delay={i * 0.05}>
-                    <li className="group flex items-center gap-1">
-                      <button onClick={() => { setState((st) => ({ ...st, activeProductId: p.id })); navigate({ to: "/top-videos" }); }} className="flex min-w-0 flex-1 items-center gap-4 py-4 text-left hover:text-primary">
-                        {p.imageUrl ? <img src={p.imageUrl} alt="" className="h-11 w-11 rounded-xl object-cover" /> : <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted"><Folder className="h-4 w-4 text-primary" /></span>}
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate font-medium">{p.name}</span>
-                          <span className="block truncate text-sm text-muted-foreground">{p.brand.name || "Sans marque"}</span>
-                        </span>
-                        <span className="font-mono text-xs text-muted-foreground">{p.createdAt ? new Date(p.createdAt).toLocaleDateString("fr-FR") : "—"}</span>
-                      </button>
-                      <button
-                        onClick={() => deleteProduct(p.id)}
-                        aria-label={`Supprimer le dossier ${p.name}`}
-                        title="Supprimer ce dossier"
-                        className="shrink-0 rounded-full p-2 text-muted-foreground opacity-0 transition-opacity hover:text-destructive focus:opacity-100 group-hover:opacity-100">
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </li>
-                  </FadeContent>
-                ))}
-              </ul>
-            )}
-          </section>
-          <section>
-            <h2 className="border-b border-dashed pb-4 text-2xl font-bold">Dernières recherches</h2>
-            {s.searches.length === 0 ? (
-              <p className="mt-6 text-muted-foreground">Aucune recherche encore.</p>
-            ) : (
-              <ul className="divide-y divide-dashed">
-                {s.searches.slice(0, 6).map((r, i) => (
-                  <FadeContent key={r.id} delay={i * 0.05}>
-                    <li className="py-4">
-                      <p className="line-clamp-2 text-sm">{r.query}</p>
-                      <p className="mt-1 font-mono text-xs text-muted-foreground">{r.count} vidéos · {new Date(r.createdAt).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}</p>
-                    </li>
-                  </FadeContent>
-                ))}
-              </ul>
-            )}
-          </section>
-        </div>
-      </div>
-    </div>
-  );
-}

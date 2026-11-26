@@ -1,9 +1,13 @@
-// Seul fichier qui sait appeler Claude (via la passerelle IA intégrée, côté serveur uniquement).
+// Seul fichier qui sait appeler Claude (SDK Anthropic, côté serveur uniquement, clé ANTHROPIC_API_KEY).
+import Anthropic from "@anthropic-ai/sdk";
 
-const MODEL = "anthropic/claude-sonnet-5" as const;
+const MODEL = "claude-sonnet-5-5";
+
+let client: Anthropic | undefined;
 
 async function callClaude(system: string, user: string): Promise<string> {
-  const res = await generateMessage({
+  client ??= new Anthropic(); // lit process.env.ANTHROPIC_API_KEY
+  const res = await client.messages.create({
     model: MODEL,
     max_tokens: 4096,
     system,

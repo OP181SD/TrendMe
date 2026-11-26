@@ -1,5 +1,5 @@
 // Composants inspirés de React Bits (TS + Tailwind), réimplémentés légèrement.
-import { motion, useInView, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { motion, useInView, useMotionValue, useSpring, AnimatePresence } from "motion/react";
 import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";

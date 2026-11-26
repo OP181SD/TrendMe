@@ -1,4 +1,5 @@
-import type { Analysis, GeneratedPrompt, Product, TargetTool, Video } from "./types";
+import { analyzeVideo, generateAdPrompt, getStoredAnalysis, saveForDemo, searchVideos } from "./api/endpoints";
+import type { Analysis, GeneratedPrompt, Product, ShootingScript, TargetTool, Video } from "./types";
 
 /** Erreur de recherche affichable à l'utilisateur, avec proposition de mode démo. */
 export class SearchFailed extends Error {}
@@ -14,16 +15,16 @@ export function imageForSearch(dataUrl: string): { mediaType: ImageType; base64:
 }
 
 export async function search(product: Product, opts: { demo: boolean; limit?: number; useImage?: boolean }) {
-  const { searchVideos } = await import("./search.functions");
   const image = opts.useImage && !opts.demo ? imageForSearch(product.imageUrl) : null;
   let res;
   try {
-    res = await searchVideos({ data: { query: product.description || product.name, limit: opts.limit ?? 10, demo: opts.demo, ...(product.style.platform ? { platform: product.style.platform } : {}), ...(image ? { image } : {}) } });
+    res = await searchVideos({ query: product.description || product.name, limit: opts.limit ?? 10, demo: opts.demo, ...(product.style.platform ? { platform: product.style.platform } : {}), ...(image ? { image } : {}) });
   } catch {
     throw new SearchFailed("Le service de recherche ne répond pas.");
   }
   if (res.error) throw new SearchFailed(res.error);
-  return { videos: res.videos, source: res.source, imageUsed: !!res.imageUsed, imageUnsupported: !!res.imageUnsupported };
+  // Le client généré et ./types décrivent la même forme ; on reste sur le vocabulaire ./types côté app.
+  return { videos: res.videos as Video[], source: res.source, imageUsed: !!res.imageUsed, imageUnsupported: !!res.imageUnsupported };
 }
 
 export function getVideo(id: string, extra: Video[] = []): Video | undefined {
@@ -45,15 +46,14 @@ export function analyze(video: Video, product: Product, demo: boolean): Promise<
   let p = pending.get(video.id);
   if (!p) {
     p = (async () => {
-      const [{ analyzeVideo }, { getStoredAnalysis }] = await Promise.all([import("./ai.functions"), import("./search.functions")]);
       if (demo) {
-        const stored = await getStoredAnalysis({ data: { videoId: video.id } });
+        const stored = await getStoredAnalysis({ videoId: video.id });
         if (stored) return stored;
       }
       try {
-        return await analyzeVideo({ data: { video, product: lite(product) } });
+        return await analyzeVideo({ video, product: lite(product) } as Parameters<typeof analyzeVideo>[0]);
       } catch (e) {
-        const stored = await getStoredAnalysis({ data: { videoId: video.id } }).catch(() => null);
+        const stored = await getStoredAnalysis({ videoId: video.id }).catch(() => null);
         if (stored) return stored;
         throw e;
       }
@@ -67,17 +67,15 @@ export function analyze(video: Video, product: Product, demo: boolean): Promise<
 export async function generate(product: Product, videos: Video[], tool: TargetTool, demo: boolean): Promise<GeneratedPrompt> {
   if (videos.length === 0) throw new Error("Choisissez au moins une inspiration");
   const analyses = await Promise.all(videos.map((v) => analyze(v, product, demo)));
-  const { generateAdPrompt } = await import("./ai.functions");
-  const out = await generateAdPrompt({ data: { product: lite(product), analyses, tool } });
+  const out = await generateAdPrompt({ product: lite(product), analyses, tool } as Parameters<typeof generateAdPrompt>[0]);
   return {
     prompt: out.prompt, kept: out.kept, original: out.original, targetTool: tool,
-    scenes: out.scenes, totalSeconds: out.totalSeconds ?? product.style.durationSeconds, music: out.music, cta: out.cta,
-    shootingScript: out.shootingScript,
+    scenes: out.scenes ?? [], totalSeconds: out.totalSeconds ?? product.style.durationSeconds, music: out.music ?? "", cta: out.cta ?? "",
+    shootingScript: (out.shootingScript ?? undefined) as ShootingScript | undefined,
   };
 }
 
 export async function saveSearchForDemo(query: string, videos: Video[]) {
-  const { saveForDemo } = await import("./search.functions");
   const analyses = videos.flatMap((v) => { const a = done.get(v.id); return a ? [{ videoId: v.id, analysis: a }] : []; });
-  return saveForDemo({ data: { query, videos, analyses } });
+  return await saveForDemo({ query, videos, analyses });
 }

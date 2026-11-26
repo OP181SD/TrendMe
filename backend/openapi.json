@@ -1,0 +1,1170 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Glow Trend Scout API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/videos": {
+      "post": {
+        "summary": "Search Videos",
+        "operationId": "searchVideos",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyses/stored": {
+      "post": {
+        "summary": "Stored Analysis",
+        "operationId": "getStoredAnalysis",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoredAnalysisInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Analysis"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Getstoredanalysis"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/demo/save": {
+      "post": {
+        "summary": "Save For Demo",
+        "operationId": "saveForDemo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveForDemoInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaveResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ai/analyze": {
+      "post": {
+        "summary": "Analyze Video",
+        "operationId": "analyzeVideo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Analysis"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ai/generate": {
+      "post": {
+        "summary": "Generate Ad Prompt",
+        "operationId": "generateAdPrompt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneratedPrompt"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Analysis": {
+        "properties": {
+          "concept": {
+            "type": "string",
+            "title": "Concept"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "UGC",
+              "tutoriel",
+              "avant/après",
+              "témoignage",
+              "unboxing",
+              "sketch",
+              "autre"
+            ],
+            "title": "Format"
+          },
+          "hook": {
+            "$ref": "#/components/schemas/Hook"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "storytelling": {
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Storytelling"
+          },
+          "visual_style": {
+            "type": "string",
+            "title": "Visual Style"
+          },
+          "cta": {
+            "type": "string",
+            "title": "Cta"
+          },
+          "why_it_works": {
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Why It Works"
+          },
+          "brandMatch": {
+            "$ref": "#/components/schemas/BrandMatch"
+          }
+        },
+        "type": "object",
+        "required": [
+          "concept",
+          "format",
+          "hook",
+          "message",
+          "storytelling",
+          "visual_style",
+          "cta",
+          "why_it_works",
+          "brandMatch"
+        ],
+        "title": "Analysis"
+      },
+      "AnalyzeInput": {
+        "properties": {
+          "video": {
+            "$ref": "#/components/schemas/Video"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          }
+        },
+        "type": "object",
+        "required": [
+          "video",
+          "product"
+        ],
+        "title": "AnalyzeInput"
+      },
+      "Brand": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone"
+          },
+          "colors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Colors"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "tone",
+          "colors",
+          "target"
+        ],
+        "title": "Brand"
+      },
+      "BrandMatch": {
+        "properties": {
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "score",
+          "reason"
+        ],
+        "title": "BrandMatch"
+      },
+      "Creator": {
+        "properties": {
+          "handle": {
+            "type": "string",
+            "title": "Handle"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "followers": {
+            "type": "integer",
+            "title": "Followers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "handle",
+          "name",
+          "followers"
+        ],
+        "title": "Creator"
+      },
+      "DemoAnalysis": {
+        "properties": {
+          "videoId": {
+            "type": "string",
+            "title": "Videoid"
+          },
+          "analysis": {
+            "$ref": "#/components/schemas/Analysis"
+          }
+        },
+        "type": "object",
+        "required": [
+          "videoId",
+          "analysis"
+        ],
+        "title": "DemoAnalysis"
+      },
+      "GenerateInput": {
+        "properties": {
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          },
+          "analyses": {
+            "items": {
+              "$ref": "#/components/schemas/Analysis"
+            },
+            "type": "array",
+            "title": "Analyses"
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "Veo",
+              "Sora",
+              "Kling",
+              "Runway"
+            ],
+            "title": "Tool"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product",
+          "analyses",
+          "tool"
+        ],
+        "title": "GenerateInput"
+      },
+      "GeneratedPrompt": {
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "kept": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Kept"
+          },
+          "original": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Original"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/PromptScene"
+            },
+            "type": "array",
+            "title": "Scenes",
+            "default": []
+          },
+          "totalSeconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Totalseconds"
+          },
+          "music": {
+            "type": "string",
+            "title": "Music",
+            "default": ""
+          },
+          "cta": {
+            "type": "string",
+            "title": "Cta",
+            "default": ""
+          },
+          "shootingScript": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ShootingScript"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "targetTool": {
+            "type": "string",
+            "enum": [
+              "Veo",
+              "Sora",
+              "Kling",
+              "Runway"
+            ],
+            "title": "Targettool"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt",
+          "kept",
+          "original",
+          "targetTool"
+        ],
+        "title": "GeneratedPrompt"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Hook": {
+        "properties": {
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "seconds": {
+            "type": "number",
+            "title": "Seconds"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "question",
+              "choc",
+              "promesse",
+              "visuel"
+            ],
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "seconds",
+          "type"
+        ],
+        "title": "Hook"
+      },
+      "Product": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "imageUrl": {
+            "type": "string",
+            "title": "Imageurl"
+          },
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Createdat"
+          },
+          "brand": {
+            "$ref": "#/components/schemas/Brand"
+          },
+          "style": {
+            "$ref": "#/components/schemas/Style"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "imageUrl",
+          "brand",
+          "style"
+        ],
+        "title": "Product"
+      },
+      "PromptScene": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "start": {
+            "type": "number",
+            "title": "Start"
+          },
+          "end": {
+            "type": "number",
+            "title": "End"
+          },
+          "shot": {
+            "type": "string",
+            "title": "Shot"
+          },
+          "visual": {
+            "type": "string",
+            "title": "Visual"
+          },
+          "voiceOver": {
+            "type": "string",
+            "title": "Voiceover"
+          },
+          "onScreenText": {
+            "type": "string",
+            "title": "Onscreentext"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "start",
+          "end",
+          "shot",
+          "visual",
+          "voiceOver",
+          "onScreenText"
+        ],
+        "title": "PromptScene"
+      },
+      "SaveForDemoInput": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "videos": {
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            },
+            "type": "array",
+            "title": "Videos"
+          },
+          "analyses": {
+            "items": {
+              "$ref": "#/components/schemas/DemoAnalysis"
+            },
+            "type": "array",
+            "title": "Analyses",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "query",
+          "videos"
+        ],
+        "title": "SaveForDemoInput"
+      },
+      "SaveResult": {
+        "properties": {
+          "videos": {
+            "type": "integer",
+            "title": "Videos"
+          },
+          "analyses": {
+            "type": "integer",
+            "title": "Analyses"
+          }
+        },
+        "type": "object",
+        "required": [
+          "videos",
+          "analyses"
+        ],
+        "title": "SaveResult"
+      },
+      "ScriptCta": {
+        "properties": {
+          "texte_oral": {
+            "type": "string",
+            "title": "Texte Oral"
+          },
+          "texte_ecran": {
+            "type": "string",
+            "title": "Texte Ecran"
+          }
+        },
+        "type": "object",
+        "required": [
+          "texte_oral",
+          "texte_ecran"
+        ],
+        "title": "ScriptCta"
+      },
+      "ScriptHook": {
+        "properties": {
+          "texte_oral": {
+            "type": "string",
+            "title": "Texte Oral"
+          },
+          "texte_ecran": {
+            "type": "string",
+            "title": "Texte Ecran"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "seconds": {
+            "type": "number",
+            "title": "Seconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "texte_oral",
+          "texte_ecran",
+          "action",
+          "seconds"
+        ],
+        "title": "ScriptHook"
+      },
+      "ScriptScene": {
+        "properties": {
+          "numero": {
+            "type": "number",
+            "title": "Numero"
+          },
+          "duree_s": {
+            "type": "number",
+            "title": "Duree S"
+          },
+          "plan": {
+            "type": "string",
+            "title": "Plan"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "texte_oral": {
+            "type": "string",
+            "title": "Texte Oral"
+          },
+          "texte_ecran": {
+            "type": "string",
+            "title": "Texte Ecran"
+          }
+        },
+        "type": "object",
+        "required": [
+          "numero",
+          "duree_s",
+          "plan",
+          "action",
+          "texte_oral",
+          "texte_ecran"
+        ],
+        "title": "ScriptScene"
+      },
+      "SearchImage": {
+        "properties": {
+          "mediaType": {
+            "type": "string",
+            "enum": [
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ],
+            "title": "Mediatype"
+          },
+          "base64": {
+            "type": "string",
+            "maxLength": 14000000,
+            "minLength": 10,
+            "title": "Base64"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mediaType",
+          "base64"
+        ],
+        "title": "SearchImage"
+      },
+      "SearchInput": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 2,
+            "title": "Query"
+          },
+          "platform": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "tiktok",
+                  "instagram",
+                  "youtube"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 5
+          },
+          "demo": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Demo"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchImage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "SearchInput"
+      },
+      "SearchResult": {
+        "properties": {
+          "videos": {
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            },
+            "type": "array",
+            "title": "Videos"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "oriane",
+              "demo"
+            ],
+            "title": "Source"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "imageUsed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imageused"
+          },
+          "imageUnsupported": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imageunsupported"
+          }
+        },
+        "type": "object",
+        "required": [
+          "videos",
+          "source"
+        ],
+        "title": "SearchResult"
+      },
+      "ShootingScript": {
+        "properties": {
+          "hook": {
+            "$ref": "#/components/schemas/ScriptHook"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptScene"
+            },
+            "type": "array",
+            "title": "Scenes"
+          },
+          "cta": {
+            "$ref": "#/components/schemas/ScriptCta"
+          },
+          "materiel": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Materiel"
+          },
+          "conseils": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Conseils"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hook",
+          "scenes",
+          "cta",
+          "materiel",
+          "conseils"
+        ],
+        "title": "ShootingScript"
+      },
+      "StoredAnalysisInput": {
+        "properties": {
+          "videoId": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Videoid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "videoId"
+        ],
+        "title": "StoredAnalysisInput"
+      },
+      "Style": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "title": "Format"
+          },
+          "durationSeconds": {
+            "type": "integer",
+            "title": "Durationseconds"
+          },
+          "platform": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "tiktok",
+                  "instagram",
+                  "youtube"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform"
+          }
+        },
+        "type": "object",
+        "required": [
+          "format",
+          "durationSeconds"
+        ],
+        "title": "Style"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Video": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "tiktok",
+              "instagram",
+              "youtube"
+            ],
+            "title": "Platform"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "thumbnailUrl": {
+            "type": "string",
+            "title": "Thumbnailurl"
+          },
+          "creator": {
+            "$ref": "#/components/schemas/Creator"
+          },
+          "publishedAt": {
+            "type": "string",
+            "title": "Publishedat"
+          },
+          "durationSeconds": {
+            "type": "integer",
+            "title": "Durationseconds"
+          },
+          "views": {
+            "type": "integer",
+            "title": "Views"
+          },
+          "likes": {
+            "type": "integer",
+            "title": "Likes"
+          },
+          "comments": {
+            "type": "integer",
+            "title": "Comments"
+          },
+          "shares": {
+            "type": "integer",
+            "title": "Shares"
+          },
+          "engagementRate": {
+            "type": "number",
+            "title": "Engagementrate"
+          },
+          "caption": {
+            "type": "string",
+            "title": "Caption"
+          },
+          "transcript": {
+            "type": "string",
+            "title": "Transcript"
+          },
+          "onScreenText": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Onscreentext"
+          },
+          "hashtags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hashtags"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score",
+            "default": 0
+          },
+          "scoreReason": {
+            "type": "string",
+            "title": "Scorereason",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "platform",
+          "url",
+          "thumbnailUrl",
+          "creator",
+          "publishedAt",
+          "durationSeconds",
+          "views",
+          "likes",
+          "comments",
+          "shares",
+          "engagementRate",
+          "caption",
+          "transcript",
+          "onScreenText",
+          "hashtags"
+        ],
+        "title": "Video"
+      }
+    }
+  }
+}
