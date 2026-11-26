@@ -8,18 +8,56 @@ import o6 from "@/assets/orbit-6.jpg";
 
 const IMAGES = [o1, o2, o3, o4, o5, o6];
 
-function Ring({ radius, count, size, duration, offset = 0, reverse }: { radius: number; count: number; size: number; duration: number; offset?: number; reverse?: boolean }) {
+function Ring({
+  radius,
+  count,
+  size,
+  duration,
+  offset = 0,
+  reverse,
+}: {
+  radius: number;
+  count: number;
+  size: number;
+  duration: number;
+  offset?: number;
+  reverse?: boolean;
+}) {
   return (
-    <div className="orbit absolute left-1/2 top-1/2" style={{ ["--orbit-duration" as string]: `${duration}s`, animationDirection: reverse ? "reverse" : "normal" }}>
+    <div
+      className="orbit absolute left-1/2 top-1/2"
+      style={{
+        ["--orbit-duration" as string]: `${duration}s`,
+        animationDirection: reverse ? "reverse" : "normal",
+      }}
+    >
       {Array.from({ length: count }).map((_, i) => {
         const angle = (360 / count) * i;
         const src = IMAGES[(i + offset) % IMAGES.length];
         return (
-          <div key={i} className="absolute left-0 top-0" style={{ transform: `rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)` }}>
-            <div className="orbit-item" style={{ ["--orbit-duration" as string]: `${duration}s`, animationDirection: reverse ? "reverse" : "normal" }}>
-              <img src={src} alt="" width={size} height={size * 1.25} loading="lazy"
+          <div
+            key={i}
+            className="absolute left-0 top-0"
+            style={{
+              transform: `rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)`,
+            }}
+          >
+            <div
+              className="orbit-item"
+              style={{
+                ["--orbit-duration" as string]: `${duration}s`,
+                animationDirection: reverse ? "reverse" : "normal",
+              }}
+            >
+              <img
+                src={src}
+                alt=""
+                width={size}
+                height={size * 1.25}
+                loading="lazy"
                 className="max-w-none -translate-x-1/2 -translate-y-1/2 rounded-2xl object-cover shadow-elegant ring-1 ring-border"
-                style={{ width: size, height: size * 1.25, rotate: `${(i % 3) * 6 - 6}deg` }} />
+                style={{ width: size, height: size * 1.25, rotate: `${(i % 3) * 6 - 6}deg` }}
+              />
             </div>
           </div>
         );

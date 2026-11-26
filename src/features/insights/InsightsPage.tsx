@@ -18,16 +18,35 @@ export function InsightsPage() {
   const r = useMemo(() => computeInsights(videos, analyses), [videos, analyses]);
 
   if (!hydrated) return null;
-  if (!product || videos.length === 0) return <EmptyState title="Aucune recherche pour l'instant" to="/produits" cta="Lancer une recherche" />;
+  if (!product || videos.length === 0)
+    return (
+      <EmptyState
+        title="Aucune recherche pour l'instant"
+        to="/produits"
+        cta="Lancer une recherche"
+      />
+    );
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12 md:px-10">
       <BackLink to="/top-videos" label="Inspirations" />
       <p className="text-sm text-muted-foreground">Dossier · {product.name}</p>
-      <BlurText text="Insights de la recherche" className="mt-2 text-5xl font-bold tracking-tight" />
-      <p className="mt-3 text-sm text-muted-foreground">« Meilleures vidéos » = la moitié du haut du classement (<span className="font-mono">{r.topCount}</span> sur <span className="font-mono">{videos.length}</span>).</p>
+      <BlurText
+        text="Insights de la recherche"
+        className="mt-2 text-5xl font-bold tracking-tight"
+      />
+      <p className="mt-3 text-sm text-muted-foreground">
+        « Meilleures vidéos » = la moitié du haut du classement (
+        <span className="font-mono">{r.topCount}</span> sur{" "}
+        <span className="font-mono">{videos.length}</span>).
+      </p>
       <PendingAnalyses count={pending} className="mt-2 block text-sm" />
-      {failed > 0 && <p className="mt-2 text-sm text-muted-foreground"><span className="font-mono">{failed}</span> analyse{failed > 1 ? "s" : ""} n'a pas abouti : statistiques calculées sans elle{failed > 1 ? "s" : ""}.</p>}
+      {failed > 0 && (
+        <p className="mt-2 text-sm text-muted-foreground">
+          <span className="font-mono">{failed}</span> analyse{failed > 1 ? "s" : ""} n'a pas abouti
+          : statistiques calculées sans elle{failed > 1 ? "s" : ""}.
+        </p>
+      )}
 
       <InsightCards r={r} />
       <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -35,7 +54,10 @@ export function InsightsPage() {
         <ShareChart title="Formats" data={r.formats} />
         <ShareChart title="Plateformes" data={r.platforms} />
       </div>
-      <p className="mt-6 text-sm text-muted-foreground">Classement basé sur les vues, l'engagement public et l'attraction (vues ÷ abonnés), pas sur les performances publicitaires.</p>
+      <p className="mt-6 text-sm text-muted-foreground">
+        Classement basé sur les vues, l'engagement public et l'attraction (vues ÷ abonnés), pas sur
+        les performances publicitaires.
+      </p>
     </div>
   );
 }

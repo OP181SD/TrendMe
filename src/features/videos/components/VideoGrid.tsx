@@ -35,8 +35,15 @@ export function VideoGrid({ videos, picked, momentum, emptyHint, onOpen, onToggl
           const checked = picked.includes(v.id);
           return (
             <FadeContent key={v.id} delay={i * 0.06}>
-              <VideoCard v={v} format={getCachedAnalysis(v.id)?.format} momentum={momentum.get(v.id)} onOpen={onOpen}
-                onToggle={onToggle} checked={checked} toggleDisabled={!checked && full} />
+              <VideoCard
+                v={v}
+                format={getCachedAnalysis(v.id)?.format}
+                momentum={momentum.get(v.id)}
+                onOpen={onOpen}
+                onToggle={onToggle}
+                checked={checked}
+                toggleDisabled={!checked && full}
+              />
             </FadeContent>
           );
         })}
@@ -48,7 +55,9 @@ export function VideoGrid({ videos, picked, momentum, emptyHint, onOpen, onToggl
 export function SkeletonGrid() {
   return (
     <div className={GRID} aria-label="Chargement des vidéos">
-      {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="aspect-[9/16] rounded-[1.75rem]" />)}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <Skeleton key={i} className="aspect-[9/16] rounded-[1.75rem]" />
+      ))}
     </div>
   );
 }

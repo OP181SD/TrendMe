@@ -5,27 +5,27 @@ Mêmes règles que `AGENTS.md` : savoir Oriane isolé, Claude isolé, scoring/in
 
 ## Structure
 
-| Fichier | Rôle | Équivalent TS |
-|---------|------|---------------|
-| `app/main.py` | routes HTTP | `*.functions.ts` |
-| `app/oriane.py` | **seul** fichier qui connaît l'API Oriane | `oriane.server.ts` |
-| `app/claude_client.py` | **seul** fichier qui appelle Claude | `claude.server.ts` |
-| `app/scoring.py` | scoring pur | `scoring.ts` |
-| `app/insights.py` | insights purs | `insights.ts` |
-| `app/ai_schema.py` | validation JSON Claude | schémas zod de `ai.functions.ts` |
-| `app/db.py` | client Supabase service-role | `client.server.ts` |
-| `app/prompts/` | prompts système | `src/prompts/` |
+| Fichier                | Rôle                                      | Équivalent TS                    |
+| ---------------------- | ----------------------------------------- | -------------------------------- |
+| `app/main.py`          | routes HTTP                               | `*.functions.ts`                 |
+| `app/oriane.py`        | **seul** fichier qui connaît l'API Oriane | `oriane.server.ts`               |
+| `app/claude_client.py` | **seul** fichier qui appelle Claude       | `claude.server.ts`               |
+| `app/scoring.py`       | scoring pur                               | `scoring.ts`                     |
+| `app/insights.py`      | insights purs                             | `insights.ts`                    |
+| `app/ai_schema.py`     | validation JSON Claude                    | schémas zod de `ai.functions.ts` |
+| `app/db.py`            | client Supabase service-role              | `client.server.ts`               |
+| `app/prompts/`         | prompts système                           | `src/prompts/`                   |
 
 ## Endpoints (1:1 avec les server functions)
 
-| Méthode | Route | Remplace |
-|---------|-------|----------|
-| POST | `/search/videos` | `searchVideos` |
-| POST | `/analyses/stored` | `getStoredAnalysis` |
-| POST | `/demo/save` | `saveForDemo` |
-| POST | `/ai/analyze` | `analyzeVideo` |
-| POST | `/ai/generate` | `generateAdPrompt` |
-| GET | `/health` | — |
+| Méthode | Route              | Remplace            |
+| ------- | ------------------ | ------------------- |
+| POST    | `/search/videos`   | `searchVideos`      |
+| POST    | `/analyses/stored` | `getStoredAnalysis` |
+| POST    | `/demo/save`       | `saveForDemo`       |
+| POST    | `/ai/analyze`      | `analyzeVideo`      |
+| POST    | `/ai/generate`     | `generateAdPrompt`  |
+| GET     | `/health`          | —                   |
 
 ## Lancer
 

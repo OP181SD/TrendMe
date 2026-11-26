@@ -1,12 +1,45 @@
 import { useSyncExternalStore } from "react";
 import type { GeneratedPrompt, Product, Video } from "./types";
 
-export interface Generation { id: string; productId: string; videos: Video[]; result: GeneratedPrompt; mode?: "ia" | "humain"; createdAt: string }
-export interface SearchEntry { id: string; productId: string; query: string; count: number; createdAt: string }
-interface State { inspirations: Record<string, string[]>; searches: SearchEntry[]; products: Product[]; activeProductId: string | null; videos: Record<string, Video[]>; analyses: number; generations: Generation[]; demoMode: boolean; imageSearchUnsupported: boolean }
+export interface Generation {
+  id: string;
+  productId: string;
+  videos: Video[];
+  result: GeneratedPrompt;
+  mode?: "ia" | "humain";
+  createdAt: string;
+}
+export interface SearchEntry {
+  id: string;
+  productId: string;
+  query: string;
+  count: number;
+  createdAt: string;
+}
+interface State {
+  inspirations: Record<string, string[]>;
+  searches: SearchEntry[];
+  products: Product[];
+  activeProductId: string | null;
+  videos: Record<string, Video[]>;
+  analyses: number;
+  generations: Generation[];
+  demoMode: boolean;
+  imageSearchUnsupported: boolean;
+}
 
 const KEY = "ads-inspirees-v2";
-const EMPTY: State = { inspirations: {}, searches: [], products: [], activeProductId: null, videos: {}, analyses: 0, generations: [], demoMode: false, imageSearchUnsupported: false };
+const EMPTY: State = {
+  inspirations: {},
+  searches: [],
+  products: [],
+  activeProductId: null,
+  videos: {},
+  analyses: 0,
+  generations: [],
+  demoMode: false,
+  imageSearchUnsupported: false,
+};
 let state: State = EMPTY;
 let loaded = false;
 const subs = new Set<() => void>();
@@ -14,27 +47,49 @@ const subs = new Set<() => void>();
 function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
-  try { const raw = localStorage.getItem(KEY); if (raw) state = { ...EMPTY, ...JSON.parse(raw) }; } catch { /* ignore */ }
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) state = { ...EMPTY, ...JSON.parse(raw) };
+  } catch {
+    /* ignore */
+  }
 }
-export function getState(): State { load(); return state; }
+export function getState(): State {
+  load();
+  return state;
+}
 export function setState(fn: (s: State) => State) {
   state = fn(state);
-  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ }
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  } catch {
+    /* ignore */
+  }
   subs.forEach((f) => f());
 }
 export function useStore(): State {
   return useSyncExternalStore(
-    (cb) => { subs.add(cb); if (!loaded) { load(); queueMicrotask(cb); } return () => subs.delete(cb); },
+    (cb) => {
+      subs.add(cb);
+      if (!loaded) {
+        load();
+        queueMicrotask(cb);
+      }
+      return () => subs.delete(cb);
+    },
     () => state,
     () => EMPTY,
   );
 }
-export const activeProduct = (s: State) => s.products.find((p) => p.id === s.activeProductId) ?? null;
+export const activeProduct = (s: State) =>
+  s.products.find((p) => p.id === s.activeProductId) ?? null;
 /** Supprime un dossier et tout ce qui s'y rattache (vidéos, inspirations, recherches, générations). */
 export function deleteProduct(productId: string) {
   setState((s) => {
-    const videos = { ...s.videos }; delete videos[productId];
-    const inspirations = { ...s.inspirations }; delete inspirations[productId];
+    const videos = { ...s.videos };
+    delete videos[productId];
+    const inspirations = { ...s.inspirations };
+    delete inspirations[productId];
     return {
       ...s,
       products: s.products.filter((p) => p.id !== productId),

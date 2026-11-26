@@ -1,5 +1,9 @@
 // @ts-nocheck — fichier tiers Evil Charts
-import { getPayloadConfigFromPayload, getColorsCount, useChart } from "@/components/evilcharts/ui/recharts-chart";
+import {
+  getPayloadConfigFromPayload,
+  getColorsCount,
+  useChart,
+} from "@/components/evilcharts/ui/recharts-chart";
 import * as RechartsPrimitive from "recharts";
 import { cn } from "@/lib/utils";
 import * as React from "react";
@@ -83,11 +87,7 @@ function ChartLegendContent({
               {itemConfig?.icon && !hideIcon ? (
                 <itemConfig.icon />
               ) : (
-                <LegendIndicator
-                  variant={variant}
-                  dataKey={key}
-                  colorsCount={colorsCount}
-                />
+                <LegendIndicator variant={variant} dataKey={key} colorsCount={colorsCount} />
               )}
               {itemConfig?.label}
             </div>
@@ -122,12 +122,7 @@ function LegendIndicator({
       return <div className="h-2 w-2 shrink-0 rounded-full" style={fillStyle} />;
 
     case "circle-outline":
-      return (
-        <div
-          className="h-2.5 w-2.5 shrink-0 rounded-full p-[1.5px]"
-          style={outlineStyle}
-        />
-      );
+      return <div className="h-2.5 w-2.5 shrink-0 rounded-full p-[1.5px]" style={outlineStyle} />;
 
     case "vertical-bar":
       return <div className="h-3 w-1 shrink-0 rounded-[2px]" style={fillStyle} />;
@@ -136,12 +131,7 @@ function LegendIndicator({
       return <div className="h-1 w-3 shrink-0 rounded-[2px]" style={fillStyle} />;
 
     case "rounded-square-outline":
-      return (
-        <div
-          className="h-2.5 w-2.5 shrink-0 rounded-[3px] p-[1.5px]"
-          style={outlineStyle}
-        />
-      );
+      return <div className="h-2.5 w-2.5 shrink-0 rounded-[3px] p-[1.5px]" style={outlineStyle} />;
 
     case "rounded-square":
     default:
@@ -175,8 +165,7 @@ function getLegendFillStyle(dataKey: string, colorsCount: number): React.CSSProp
  */
 function getLegendOutlineStyle(dataKey: string, colorsCount: number): React.CSSProperties {
   const maskStyle: React.CSSProperties = {
-    WebkitMask:
-      "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+    WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
     WebkitMaskComposite: "xor",
     mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
     maskComposite: "exclude",

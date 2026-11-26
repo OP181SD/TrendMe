@@ -38,16 +38,21 @@ export function scoreVideos(videos: Scorable[]): Video[] {
   const scored = videos.map((v) => {
     const samePlatform = videos.filter((o) => o.platform === v.platform);
     const pool = samePlatform.length >= 2 ? samePlatform : videos;
-    const engRank = percentileRank(pool.map((o) => o.engagementRate), v.engagementRate);
+    const engRank = percentileRank(
+      pool.map((o) => o.engagementRate),
+      v.engagementRate,
+    );
     const viewRank = percentileRank(allViews, v.views);
     const vfr = viewsPerFollower(v);
-    const raw = vfr !== null
-      ? 0.5 * percentileRank(vfrs, vfr) + 0.3 * engRank + 0.2 * viewRank
-      : 0.6 * engRank + 0.4 * viewRank;
+    const raw =
+      vfr !== null
+        ? 0.5 * percentileRank(vfrs, vfr) + 0.3 * engRank + 0.2 * viewRank
+        : 0.6 * engRank + 0.4 * viewRank;
     const score = Math.round(raw * 100);
-    const scoreReason = vfr !== null
-      ? `Attraction ${ratio(vfr)}× la communauté, engagement ${pct(v.engagementRate)} %.`
-      : `Engagement ${pct(v.engagementRate)} % (abonnés inconnus).`;
+    const scoreReason =
+      vfr !== null
+        ? `Attraction ${ratio(vfr)}× la communauté, engagement ${pct(v.engagementRate)} %.`
+        : `Engagement ${pct(v.engagementRate)} % (abonnés inconnus).`;
     return { ...v, score, scoreReason };
   });
   return scored.sort((a, b) => b.score - a.score);

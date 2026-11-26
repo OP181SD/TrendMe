@@ -126,28 +126,60 @@
 }
 
 .shiny-text {
-  background: linear-gradient(110deg, var(--muted-foreground) 35%, var(--foreground) 50%, var(--muted-foreground) 65%);
+  background: linear-gradient(
+    110deg,
+    var(--muted-foreground) 35%,
+    var(--foreground) 50%,
+    var(--muted-foreground) 65%
+  );
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   animation: shiny 2s linear infinite;
 }
-@keyframes shiny { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@keyframes shiny {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
 
 .aurora::before {
   content: "";
   position: absolute;
   inset: -40% -10% 0;
   background:
-    radial-gradient(40% 50% at 30% 40%, color-mix(in oklab, var(--primary) 35%, transparent), transparent 70%),
-    radial-gradient(35% 45% at 70% 30%, color-mix(in oklab, var(--primary-glow) 25%, transparent), transparent 70%);
+    radial-gradient(
+      40% 50% at 30% 40%,
+      color-mix(in oklab, var(--primary) 35%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      35% 45% at 70% 30%,
+      color-mix(in oklab, var(--primary-glow) 25%, transparent),
+      transparent 70%
+    );
   filter: blur(60px);
   opacity: 0.55;
   animation: aurora 18s ease-in-out infinite alternate;
 }
-@keyframes aurora { from { transform: translateX(-6%) scale(1); } to { transform: translateX(6%) scale(1.1); } }
-@media (prefers-reduced-motion: reduce) { .aurora::before, .shiny-text { animation: none; } }
+@keyframes aurora {
+  from {
+    transform: translateX(-6%) scale(1);
+  }
+  to {
+    transform: translateX(6%) scale(1.1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora::before,
+  .shiny-text {
+    animation: none;
+  }
+}
 
 @font-face {
   font-family: "Departure Mono";
@@ -156,8 +188,25 @@
 }
 
 /* Orbite d'images de l'accueil */
-@keyframes orbit { to { transform: rotate(360deg); } }
-@keyframes orbit-rev { to { transform: rotate(-360deg); } }
-.orbit { animation: orbit var(--orbit-duration, 60s) linear infinite; }
-.orbit-item { animation: orbit-rev var(--orbit-duration, 60s) linear infinite; }
-@media (prefers-reduced-motion: reduce) { .orbit, .orbit-item { animation: none; } }
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes orbit-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.orbit {
+  animation: orbit var(--orbit-duration, 60s) linear infinite;
+}
+.orbit-item {
+  animation: orbit-rev var(--orbit-duration, 60s) linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit,
+  .orbit-item {
+    animation: none;
+  }
+}

@@ -23,21 +23,21 @@ Keywords: rounded, soft, premium, airy, blue-accent, glow, editorial, modern-Saa
 
 ## Couleurs (light theme, oklch)
 
-| Role | oklch | ~hex | Usage |
-|------|-------|------|-------|
-| background | `0.975 0.003 90` | `#f7f6f3` | warm off-white canvas |
-| foreground | `0.17 0.005 260` | `#1f2024` | main text |
-| card / popover | `1 0 0` | `#ffffff` | surfaces |
-| **primary** | `0.58 0.2 258` | `#3b5bf5` | royal blue — buttons, accent, logo dot |
-| primary-glow | `0.76 0.14 245` | `#6aa8ef` | sky blue — gradient end, glows |
-| secondary / muted | `0.94 0.004 90` | `#eeede9` | subtle fills |
-| muted-foreground | `0.5 0.01 260` | `#767680` | secondary text |
-| accent | `0.93 0.03 255` | `#dde4f2` | tinted-blue fills |
-| accent-foreground | `0.4 0.15 255` | `#3350a0` | text on accent |
-| destructive | `0.65 0.2 25` | `#e5563f` | errors / danger |
-| ink | `0.11 0.005 260` | `#141519` | near-black (logo, dark blocks) |
-| border / input | `0 0 0 / 10%` | `rgba(0,0,0,.1)` | hairlines |
-| ring | `0.66 0.19 255` | `#4f7bf0` | focus |
+| Role              | oklch            | ~hex             | Usage                                  |
+| ----------------- | ---------------- | ---------------- | -------------------------------------- |
+| background        | `0.975 0.003 90` | `#f7f6f3`        | warm off-white canvas                  |
+| foreground        | `0.17 0.005 260` | `#1f2024`        | main text                              |
+| card / popover    | `1 0 0`          | `#ffffff`        | surfaces                               |
+| **primary**       | `0.58 0.2 258`   | `#3b5bf5`        | royal blue — buttons, accent, logo dot |
+| primary-glow      | `0.76 0.14 245`  | `#6aa8ef`        | sky blue — gradient end, glows         |
+| secondary / muted | `0.94 0.004 90`  | `#eeede9`        | subtle fills                           |
+| muted-foreground  | `0.5 0.01 260`   | `#767680`        | secondary text                         |
+| accent            | `0.93 0.03 255`  | `#dde4f2`        | tinted-blue fills                      |
+| accent-foreground | `0.4 0.15 255`   | `#3350a0`        | text on accent                         |
+| destructive       | `0.65 0.2 25`    | `#e5563f`        | errors / danger                        |
+| ink               | `0.11 0.005 260` | `#141519`        | near-black (logo, dark blocks)         |
+| border / input    | `0 0 0 / 10%`    | `rgba(0,0,0,.1)` | hairlines                              |
+| ring              | `0.66 0.19 255`  | `#4f7bf0`        | focus                                  |
 
 Charts (blue mono-ramp): `0.66 0.19 255`, `0.76 0.14 245`, `0.5 0.12 255`, `0.85 0.08 250`, `0.4 0.08 255`.
 

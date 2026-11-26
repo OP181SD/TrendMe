@@ -6,7 +6,15 @@ import { useCopy } from "@/hooks/use-copy";
 import type { ShootingScript } from "@/lib/types";
 import { downloadBlob, scriptToPdf, scriptToText } from "@/lib/script-export";
 
-export function ShootingScriptView({ script, title, onRegenerate }: { script?: ShootingScript | undefined; title: string; onRegenerate: () => void }) {
+export function ShootingScriptView({
+  script,
+  title,
+  onRegenerate,
+}: {
+  script?: ShootingScript | undefined;
+  title: string;
+  onRegenerate: () => void;
+}) {
   const { copied, copy } = useCopy("Script copié");
   const [pdf, setPdf] = useState<Blob | null>(null);
 
@@ -21,7 +29,11 @@ export function ShootingScriptView({ script, title, onRegenerate }: { script?: S
     return (
       <div className="rounded-[2rem] border border-dashed bg-card p-10 text-center text-muted-foreground">
         Ce prompt a été généré avant l'ajout du script de tournage.
-        <div className="mt-4"><Button className="rounded-full" onClick={onRegenerate}>Régénérer pour obtenir le script</Button></div>
+        <div className="mt-4">
+          <Button className="rounded-full" onClick={onRegenerate}>
+            Régénérer pour obtenir le script
+          </Button>
+        </div>
       </div>
     );
   }
@@ -30,7 +42,9 @@ export function ShootingScriptView({ script, title, onRegenerate }: { script?: S
     <div className="space-y-4">
       <div className="rounded-[2rem] border border-solid border-primary/60 bg-card p-6">
         <div className="flex items-center justify-between">
-          <p className="text-xs uppercase tracking-wider text-primary">Hook · les premières secondes</p>
+          <p className="text-xs uppercase tracking-wider text-primary">
+            Hook · les premières secondes
+          </p>
           <span className="font-mono text-sm text-primary">0–{script.hook.seconds} s</span>
         </div>
         <p className="mt-3 text-2xl font-bold">« {script.hook.texte_oral} »</p>
@@ -43,10 +57,14 @@ export function ShootingScriptView({ script, title, onRegenerate }: { script?: S
       <ol className="space-y-3">
         {script.scenes.map((sc, i) => (
           <li key={i} className="flex gap-4 rounded-[1.75rem] border border-dashed bg-card p-5">
-            <span className="font-mono text-3xl text-primary">{String(sc.numero || i + 1).padStart(2, "0")}</span>
+            <span className="font-mono text-3xl text-primary">
+              {String(sc.numero || i + 1).padStart(2, "0")}
+            </span>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" className="rounded-full">{sc.plan}</Badge>
+                <Badge variant="secondary" className="rounded-full">
+                  {sc.plan}
+                </Badge>
                 <span className="font-mono text-xs text-muted-foreground">{sc.duree_s} s</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{sc.action}</p>
@@ -69,27 +87,51 @@ export function ShootingScriptView({ script, title, onRegenerate }: { script?: S
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-[1.75rem] border border-dashed bg-card p-6">
-          <p className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground"><Package className="size-4" /> Matériel</p>
+          <p className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
+            <Package className="size-4" /> Matériel
+          </p>
           <ul className="mt-4 flex flex-wrap gap-2 border-t border-dashed pt-4">
-            {script.materiel.map((m) => <li key={m}><Badge variant="outline" className="rounded-full">{m}</Badge></li>)}
+            {script.materiel.map((m) => (
+              <li key={m}>
+                <Badge variant="outline" className="rounded-full">
+                  {m}
+                </Badge>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="rounded-[1.75rem] border border-dashed bg-card p-6">
-          <p className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground"><Lightbulb className="size-4" /> 3 conseils</p>
+          <p className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
+            <Lightbulb className="size-4" /> 3 conseils
+          </p>
           <ol className="mt-4 space-y-2 border-t border-dashed pt-4 text-sm">
-            {script.conseils.slice(0, 3).map((c, i) => <li key={i} className="flex gap-2"><span className="font-mono text-primary">{i + 1}</span>{c}</li>)}
+            {script.conseils.slice(0, 3).map((c, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="font-mono text-primary">{i + 1}</span>
+                {c}
+              </li>
+            ))}
           </ol>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <Button onClick={() => copy(scriptToText(script, title))} className="rounded-full">{copied ? <Check /> : <Copy />} {copied ? "Copié" : "Copier le script"}</Button>
-        <Button variant="secondary" className="rounded-full" onClick={downloadPdf}><Download /> Télécharger en PDF</Button>
+        <Button onClick={() => copy(scriptToText(script, title))} className="rounded-full">
+          {copied ? <Check /> : <Copy />} {copied ? "Copié" : "Copier le script"}
+        </Button>
+        <Button variant="secondary" className="rounded-full" onClick={downloadPdf}>
+          <Download /> Télécharger en PDF
+        </Button>
       </div>
     </div>
   );
 }
 
 function Field({ label, value }: { label: string; value: string }) {
-  return <div><p className="text-xs text-muted-foreground">{label}</p><p className="mt-0.5">{value || "—"}</p></div>;
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-0.5">{value || "—"}</p>
+    </div>
+  );
 }

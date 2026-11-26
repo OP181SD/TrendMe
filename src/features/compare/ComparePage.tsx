@@ -15,7 +15,14 @@ export function ComparePage() {
 
   if (!hydrated) return null;
   if (!product || videos.length < 2) {
-    return <EmptyState title="Choisissez 2 ou 3 vidéos" text="Cochez « Ajouter aux inspirations » sur 2 ou 3 vidéos pour les comparer." to="/top-videos" cta="Voir les vidéos" />;
+    return (
+      <EmptyState
+        title="Choisissez 2 ou 3 vidéos"
+        text="Cochez « Ajouter aux inspirations » sur 2 ou 3 vidéos pour les comparer."
+        to="/top-videos"
+        cta="Voir les vidéos"
+      />
+    );
   }
   return (
     <div className="mx-auto max-w-6xl px-6 py-12 md:px-10">

@@ -12,10 +12,18 @@ export function RecapCards({ product }: { product: Product }) {
       <FadeContent className={CARD}>
         <p className="text-xs uppercase tracking-wider text-muted-foreground">Recherche</p>
         <div className="mt-3 flex gap-4">
-          {product.imageUrl && <img src={product.imageUrl} alt="" className="h-16 w-16 rounded-2xl object-cover" />}
-          <div><p className="text-lg font-bold">{product.name}</p><p className="mt-1 text-sm text-muted-foreground">{product.description}</p></div>
+          {product.imageUrl && (
+            <img src={product.imageUrl} alt="" className="h-16 w-16 rounded-2xl object-cover" />
+          )}
+          <div>
+            <p className="text-lg font-bold">{product.name}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{product.description}</p>
+          </div>
         </div>
-        <p className="mt-4 border-t border-dashed pt-4 text-sm">{style.format} · <span className="font-mono">{style.durationSeconds} s</span> · {style.platform ? platformLabel[style.platform] : "Toutes plateformes"}</p>
+        <p className="mt-4 border-t border-dashed pt-4 text-sm">
+          {style.format} · <span className="font-mono">{style.durationSeconds} s</span> ·{" "}
+          {style.platform ? platformLabel[style.platform] : "Toutes plateformes"}
+        </p>
       </FadeContent>
       <FadeContent delay={0.08} className={CARD}>
         <p className="text-xs uppercase tracking-wider text-muted-foreground">Marque</p>
@@ -31,5 +39,10 @@ export function RecapCards({ product }: { product: Product }) {
 }
 
 function Row({ label, value }: { label: string; value: string }) {
-  return <div className="flex gap-2"><dt className="text-muted-foreground">{label}</dt><dd>{value || "—"}</dd></div>;
+  return (
+    <div className="flex gap-2">
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd>{value || "—"}</dd>
+    </div>
+  );
 }

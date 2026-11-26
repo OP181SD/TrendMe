@@ -13,7 +13,13 @@ export function RecentSearches({ searches }: { searches: SearchEntry[] }) {
             <FadeContent key={r.id} delay={i * 0.05}>
               <li className="py-4">
                 <p className="line-clamp-2 text-sm">{r.query}</p>
-                <p className="mt-1 font-mono text-xs text-muted-foreground">{r.count} vidéos · {new Date(r.createdAt).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}</p>
+                <p className="mt-1 font-mono text-xs text-muted-foreground">
+                  {r.count} vidéos ·{" "}
+                  {new Date(r.createdAt).toLocaleString("fr-FR", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}
+                </p>
               </li>
             </FadeContent>
           ))}

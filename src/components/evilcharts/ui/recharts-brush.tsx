@@ -3,7 +3,11 @@
 
 import { motion, useMotionValue, useMotionValueEvent, useSpring, useTransform } from "motion/react";
 import { ResponsiveContainer, AreaChart, Area, LineChart, Line, BarChart, Bar } from "recharts";
-import { ChartStyle, getColorsCount, type ChartConfig } from "@/components/evilcharts/ui/recharts-chart";
+import {
+  ChartStyle,
+  getColorsCount,
+  type ChartConfig,
+} from "@/components/evilcharts/ui/recharts-chart";
 import { useCallback, useEffect, type ComponentProps, type FC } from "react";
 import type { MotionValue } from "motion/react";
 import { cn } from "@/lib/utils";

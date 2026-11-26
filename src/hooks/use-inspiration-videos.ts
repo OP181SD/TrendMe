@@ -8,5 +8,8 @@ export function useInspirationVideos(product: Product | null): Video[] {
   const s = useStore();
   const ids = product ? s.inspirations[product.id] : undefined;
   const pool = product ? s.videos[product.id] : undefined;
-  return useMemo(() => (ids ?? []).map((id) => getVideo(id, pool ?? [])).filter((v): v is Video => !!v), [ids, pool]);
+  return useMemo(
+    () => (ids ?? []).map((id) => getVideo(id, pool ?? [])).filter((v): v is Video => !!v),
+    [ids, pool],
+  );
 }

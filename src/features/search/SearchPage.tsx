@@ -24,19 +24,36 @@ export function SearchPage() {
     const product = { ...p, createdAt: new Date().toISOString() };
     let videos;
     try {
-      const res = await search(product, { demo: getState().demoMode, useImage: canUseImage && useImage });
+      const res = await search(product, {
+        demo: getState().demoMode,
+        useImage: canUseImage && useImage,
+      });
       videos = res.videos;
       if (res.imageUnsupported) {
         setState((st) => ({ ...st, imageSearchUnsupported: true }));
-        toast.info("La recherche par image n'est pas disponible : résultats trouvés avec la description seule.");
+        toast.info(
+          "La recherche par image n'est pas disponible : résultats trouvés avec la description seule.",
+        );
       }
     } catch (e) {
       setLoading(false);
       const demoOn = getState().demoMode;
       toast.error(e instanceof SearchFailed ? e.message : "La recherche a échoué.", {
-        description: demoOn ? "Aucune vidéo enregistrée pour la démo." : "Passez en mode démo pour utiliser les vidéos déjà enregistrées.",
+        description: demoOn
+          ? "Aucune vidéo enregistrée pour la démo."
+          : "Passez en mode démo pour utiliser les vidéos déjà enregistrées.",
         duration: 12000,
-        ...(demoOn ? {} : { action: { label: "Passer en mode démo", onClick: () => { setState((st) => ({ ...st, demoMode: true })); void finish(); } } }),
+        ...(demoOn
+          ? {}
+          : {
+              action: {
+                label: "Passer en mode démo",
+                onClick: () => {
+                  setState((st) => ({ ...st, demoMode: true }));
+                  void finish();
+                },
+              },
+            }),
       });
       return;
     }
@@ -45,7 +62,16 @@ export function SearchPage() {
       products: [product, ...st.products],
       activeProductId: product.id,
       videos: { ...st.videos, [product.id]: videos },
-      searches: [{ id: crypto.randomUUID(), productId: product.id, query: product.description, count: videos.length, createdAt: new Date().toISOString() }, ...st.searches],
+      searches: [
+        {
+          id: crypto.randomUUID(),
+          productId: product.id,
+          query: product.description,
+          count: videos.length,
+          createdAt: new Date().toISOString(),
+        },
+        ...st.searches,
+      ],
     }));
     setLoading(false);
     navigate({ to: "/top-videos" });
@@ -55,10 +81,30 @@ export function SearchPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16 md:px-10">
       <BlurText text="Trouver des inspirations" className="text-5xl font-bold tracking-tight" />
-      <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); if (ready) void finish(); }}>
-        <SearchBar value={p.name} onChange={(name) => set({ name, description: name })} loading={loading} disabled={!ready} />
-        <PlatformChips value={p.style.platform} onChange={(platform) => setStyle({ platform })} onExample={loadExample} />
-        <ProductOptions form={form} canUseImage={canUseImage} useImage={useImage} onUseImage={setUseImage} />
+      <form
+        className="mt-8 space-y-6"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (ready) void finish();
+        }}
+      >
+        <SearchBar
+          value={p.name}
+          onChange={(name) => set({ name, description: name })}
+          loading={loading}
+          disabled={!ready}
+        />
+        <PlatformChips
+          value={p.style.platform}
+          onChange={(platform) => setStyle({ platform })}
+          onExample={loadExample}
+        />
+        <ProductOptions
+          form={form}
+          canUseImage={canUseImage}
+          useImage={useImage}
+          onUseImage={setUseImage}
+        />
       </form>
     </div>
   );

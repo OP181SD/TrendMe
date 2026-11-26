@@ -32,34 +32,72 @@ export function PromptPage() {
       toast.error("La régénération a échoué.", { description: "Réessayez dans un instant." });
       return;
     }
-    setState((st) => ({ ...st, generations: st.generations.map((x) => (x.id === g.id ? { ...x, result, createdAt: new Date().toISOString() } : x)) }));
+    setState((st) => ({
+      ...st,
+      generations: st.generations.map((x) =>
+        x.id === g.id ? { ...x, result, createdAt: new Date().toISOString() } : x,
+      ),
+    }));
     setRegen(false);
     toast.success("Nouvelle version générée");
   }, [g, product, s.demoMode]);
 
   if (!hydrated) return null;
-  if (!g || !product) return <div className="p-12 text-center text-muted-foreground">Prompt introuvable. <Link to="/generations" className="text-primary">Voir les générations</Link></div>;
+  if (!g || !product)
+    return (
+      <div className="p-12 text-center text-muted-foreground">
+        Prompt introuvable.{" "}
+        <Link to="/generations" className="text-primary">
+          Voir les générations
+        </Link>
+      </div>
+    );
   const r = g.result;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12 md:px-10">
       <BackLink to="/generation" label="Génération" className="mb-4" />
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <BlurText text={g.mode === "humain" ? "Votre script de tournage" : `Votre prompt pour ${r.targetTool}`} className="text-5xl font-bold tracking-tight" />
-        <p className="font-mono text-sm text-muted-foreground">{r.scenes.length} scènes · {r.totalSeconds} s</p>
+        <BlurText
+          text={
+            g.mode === "humain" ? "Votre script de tournage" : `Votre prompt pour ${r.targetTool}`
+          }
+          className="text-5xl font-bold tracking-tight"
+        />
+        <p className="font-mono text-sm text-muted-foreground">
+          {r.scenes.length} scènes · {r.totalSeconds} s
+        </p>
       </div>
       <SceneTimeline scenes={r.scenes} />
 
       <Tabs defaultValue={g.mode === "humain" ? "script" : "prompt"} className="mt-6">
         <TabsList className="rounded-full">
-          <TabsTrigger value="prompt" className="rounded-full">Prompt IA</TabsTrigger>
-          <TabsTrigger value="script" className="rounded-full">Script de tournage</TabsTrigger>
+          <TabsTrigger value="prompt" className="rounded-full">
+            Prompt IA
+          </TabsTrigger>
+          <TabsTrigger value="script" className="rounded-full">
+            Script de tournage
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="script" className="mt-4">
-          {regen ? <RegenLoading /> : <ShootingScriptView script={r.shootingScript} title={product.name} onRegenerate={regenerate} />}
+          {regen ? (
+            <RegenLoading />
+          ) : (
+            <ShootingScriptView
+              script={r.shootingScript}
+              title={product.name}
+              onRegenerate={regenerate}
+            />
+          )}
         </TabsContent>
         <TabsContent value="prompt">
-          <PromptCard prompt={r.prompt} regen={regen} copied={copied} onCopy={() => copy(r.prompt)} onRegenerate={regenerate} />
+          <PromptCard
+            prompt={r.prompt}
+            regen={regen}
+            copied={copied}
+            onCopy={() => copy(r.prompt)}
+            onRegenerate={regenerate}
+          />
         </TabsContent>
       </Tabs>
 

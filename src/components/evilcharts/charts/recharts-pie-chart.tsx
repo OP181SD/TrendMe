@@ -34,8 +34,15 @@ import {
   getColorsCount,
   LoadingIndicator,
 } from "@/components/evilcharts/ui/recharts-chart";
-import { ChartLegend, ChartLegendContent, type ChartLegendVariant } from "@/components/evilcharts/ui/recharts-legend";
-import { ChartBackground, type BackgroundVariant } from "@/components/evilcharts/ui/recharts-background";
+import {
+  ChartLegend,
+  ChartLegendContent,
+  type ChartLegendVariant,
+} from "@/components/evilcharts/ui/recharts-legend";
+import {
+  ChartBackground,
+  type BackgroundVariant,
+} from "@/components/evilcharts/ui/recharts-background";
 import { motion } from "motion/react";
 
 // Constants

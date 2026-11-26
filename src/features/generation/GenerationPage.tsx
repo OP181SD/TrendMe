@@ -33,26 +33,53 @@ export function GenerationPage() {
       return;
     }
     const id = crypto.randomUUID();
-    setState((st) => ({ ...st, generations: [{ id, productId: product.id, videos, result, mode, createdAt: new Date().toISOString() }, ...st.generations] }));
+    setState((st) => ({
+      ...st,
+      generations: [
+        { id, productId: product.id, videos, result, mode, createdAt: new Date().toISOString() },
+        ...st.generations,
+      ],
+    }));
     setLoading(false);
     navigate({ to: "/prompt/$id", params: { id } });
   }, [product, videos, tool, mode, s.demoMode, navigate]);
 
-  const removeInspiration = useCallback((videoId: string) => { if (product) toggleInspiration(product.id, videoId); }, [product]);
+  const removeInspiration = useCallback(
+    (videoId: string) => {
+      if (product) toggleInspiration(product.id, videoId);
+    },
+    [product],
+  );
 
   if (!hydrated) return null;
   if (!product) {
-    return <div className="p-12 text-center text-muted-foreground">Aucune recherche. <Link to="/produits" className="text-primary">Trouver des inspirations</Link></div>;
+    return (
+      <div className="p-12 text-center text-muted-foreground">
+        Aucune recherche.{" "}
+        <Link to="/produits" className="text-primary">
+          Trouver des inspirations
+        </Link>
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12 md:px-10">
       <BlurText text="Génération" className="text-5xl font-bold tracking-tight" />
-      <p className="mt-3 text-muted-foreground">Vérifiez le récapitulatif, choisissez l'outil vidéo, puis générez.</p>
+      <p className="mt-3 text-muted-foreground">
+        Vérifiez le récapitulatif, choisissez l'outil vidéo, puis générez.
+      </p>
       <RecapCards product={product} />
       <InspirationStrip videos={videos} onRemove={removeInspiration} />
       <ModePicker value={mode} onChange={setMode} />
-      <GenerateBar mode={mode} tool={tool} onTool={setTool} loading={loading} disabled={videos.length === 0} onRun={run} />
+      <GenerateBar
+        mode={mode}
+        tool={tool}
+        onTool={setTool}
+        loading={loading}
+        disabled={videos.length === 0}
+        onRun={run}
+      />
     </div>
   );
 }
