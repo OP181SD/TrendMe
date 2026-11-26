@@ -28,7 +28,7 @@ _PROMPTS = Path(__file__).parent / "prompts"
 ANALYZE_SYSTEM = (_PROMPTS / "analyze.system.txt").read_text(encoding="utf-8")
 GENERATE_SYSTEM = (_PROMPTS / "generate.system.txt").read_text(encoding="utf-8")
 
-app = FastAPI(title="Glow Trend Scout API")
+app = FastAPI(title="TrendMe API")
 
 app.add_middleware(
     CORSMiddleware,

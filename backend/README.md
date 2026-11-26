@@ -1,4 +1,4 @@
-# Backend Python — Glow Trend Scout
+# Backend Python — TrendMe
 
 FastAPI. Réécriture from-scratch du backend (server functions TanStack) en Python.
 Mêmes règles que `AGENTS.md` : savoir Oriane isolé, Claude isolé, scoring/insights purs et testés.

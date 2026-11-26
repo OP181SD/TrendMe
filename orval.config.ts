@@ -3,7 +3,7 @@ import { defineConfig } from "orval";
 // Génère un client TanStack Query typé depuis le spec OpenAPI du backend FastAPI.
 // Régénérer : `bun run gen:api` (après `bun run dump:api` si le backend a changé).
 export default defineConfig({
-  glowtrend: {
+  trendme: {
     input: "./backend/openapi.json",
     output: {
       target: "./src/lib/api/endpoints.ts",
