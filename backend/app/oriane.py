@@ -60,7 +60,7 @@ def normalize_oriane(r: dict) -> Optional[dict]:
         "likes": likes,
         "comments": comments,
         "shares": shares,
-        # En pourcentage. Fourni par Oriane si possible, sinon calculé.
+
         "engagementRate": er if provided else ((likes + comments + shares) / views) * 100,
         "providedEngagement": provided,
         "caption": r.get("caption") or "",
@@ -106,7 +106,7 @@ async def search_oriane(
     root = base_url.rstrip("/")
 
     async with httpx.AsyncClient(timeout=30) as http:
-        # Recherche par image : créer un asset image, puis filtrer par similarité visuelle.
+
         asset_id: Optional[str] = None
         if image:
             ok = False

@@ -1,7 +1,6 @@
 import { FadeContent } from "@/components/reactbits";
 import { cn } from "@/lib/utils";
 
-/** Deux colonnes : ce qui vient des inspirations / ce qui vient de la marque. */
 export function KeptOriginal({ kept, original }: { kept: string[]; original: string[] }) {
   return (
     <div className="mt-6 grid gap-4 md:grid-cols-2">

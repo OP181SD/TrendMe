@@ -37,10 +37,6 @@ function shares(values: string[]): Share[] {
 }
 const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 
-/**
- * « Meilleures vidéos » = la moitié supérieure par score (au moins 1).
- * Les pourcentages de hook et de format portent sur les meilleures vidéos analysées.
- */
 export function computeInsights(
   videos: Video[],
   analyses: Record<string, Analysis | undefined>,

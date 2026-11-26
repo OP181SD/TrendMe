@@ -86,8 +86,6 @@ class SearchImage(BaseModel):
     base64: str = Field(min_length=10, max_length=14_000_000)
 
 
-# ---- Request bodies (mirror server-function validators) ----
-
 class SearchInput(BaseModel):
     query: str = Field(min_length=2, max_length=500)
     platform: Optional[Platform] = None

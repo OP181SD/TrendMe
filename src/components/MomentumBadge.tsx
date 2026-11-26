@@ -4,7 +4,6 @@ import { compact } from "@/lib/format";
 import type { MomentumInfo } from "@/lib/scoring";
 import { cn } from "@/lib/utils";
 
-/** Flèche hausse/baisse des vues avec explication au survol. Rien si tendance plate. Doit être sous un TooltipProvider. */
 export function MomentumBadge({
   momentum,
   className,

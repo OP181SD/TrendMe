@@ -5,7 +5,6 @@ import { BlurText, ShinyText } from "@/components/reactbits";
 type To = NonNullable<LinkProps["to"]>;
 import { Button } from "@/components/ui/button";
 
-/** Page vide centrée : titre animé, texte optionnel, bouton vers une autre page. */
 export function EmptyState({
   title,
   text,
@@ -28,7 +27,6 @@ export function EmptyState({
   );
 }
 
-/** Bouton « ← label » en haut de page. */
 export function BackLink({
   to,
   label,
@@ -47,7 +45,6 @@ export function BackLink({
   );
 }
 
-/** « Analyse de N vidéos en cours… », rien si 0. */
 export function PendingAnalyses({ count, className }: { count: number; className: string }) {
   if (count <= 0) return null;
   return (

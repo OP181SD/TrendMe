@@ -11,7 +11,6 @@ interface Props {
   onDelete: (id: string) => void;
 }
 
-/** Liste des dossiers de la barre latérale, avec nombre de vidéos et suppression au survol. */
 export function SidebarProducts({
   products,
   activeId,

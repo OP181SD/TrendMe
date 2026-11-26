@@ -30,7 +30,7 @@ export function TopVideosPage() {
 
   const all = productId ? s.videos[productId] : undefined;
   const picked = (productId && s.inspirations[productId]) || NONE;
-  // Tendance des vues calculée sur toute la recherche, pas sur le filtre affiché.
+
   const momentum = useMemo(
     () => new Map((all ?? []).map((v) => [v.id, viewsMomentum(v, all ?? [])])),
     [all],
@@ -58,7 +58,7 @@ export function TopVideosPage() {
   const saveDemo = useCallback(async () => {
     if (!product || !all?.length) return;
     setSaving(true);
-    // Analyse les vidéos pas encore analysées, puis garde tout en base.
+
     await Promise.allSettled(all.map((v) => analyze(v, product, s.demoMode)));
     try {
       const r = await saveSearchForDemo(product.description || product.name, all);

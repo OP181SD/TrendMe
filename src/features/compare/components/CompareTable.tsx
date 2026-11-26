@@ -32,7 +32,6 @@ const ROWS: { label: string; cell: (v: Video, a: Analysis | undefined) => ReactN
   },
 ];
 
-/** Tableau côte à côte : une colonne par vidéo, une ligne par critère. « … » tant que l'analyse manque. */
 export function CompareTable({ videos, analyses }: { videos: Video[]; analyses: Analyses }) {
   return (
     <FadeContent className="mt-8 overflow-x-auto rounded-[2rem] border border-dashed bg-card">

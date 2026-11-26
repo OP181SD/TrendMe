@@ -4,12 +4,10 @@ import { nitro } from "nitro/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-// Hosting target: set NITRO_PRESET (e.g. "vercel", "cloudflare-module", "netlify"); defaults to a Node server.
 export default defineConfig(({ command }) => ({
   plugins: [
     tailwindcss(),
     tanstackStart({
-      // src/server.ts wraps the bundled server entry (SSR error page).
       server: { entry: "server" },
       importProtection: {
         behavior: "error",

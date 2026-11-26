@@ -24,7 +24,6 @@ const tierLabel: Record<AttractionTier, string> = {
   inconnu: "Attraction",
 };
 
-/** Vues ÷ abonnés ramené sur 100 (échelle log) : 1× = 50, 4× = 100, ≤0,25× = 0. */
 export function attractionScore(vfr: number | null): number | null {
   if (vfr === null || vfr <= 0) return vfr === null ? null : 0;
   return Math.round(Math.min(100, Math.max(0, 50 + 25 * Math.log2(vfr))));
@@ -35,9 +34,9 @@ interface Props {
   format?: string | undefined;
   selected?: boolean;
   momentum?: MomentumInfo | undefined;
-  /** Callbacks reçoivent l'id : le parent passe une seule fonction stable (useCallback) pour toute la liste. */
+
   onOpen?: (id: string) => void;
-  /** Case « Ajouter aux inspirations » affichée seulement si onToggle est fourni. */
+
   onToggle?: (id: string) => void;
   checked?: boolean;
   toggleDisabled?: boolean;

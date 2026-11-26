@@ -48,7 +48,7 @@ describe("score", () => {
       base("small", "tiktok", 1_000_000, 5, 10_000),
     ]);
     expect(res[0]!.id).toBe("small");
-    expect(res[0]!.score).toBe(75); // 0.5×1 + 0.3×0.5 + 0.2×0.5
+    expect(res[0]!.score).toBe(75);
     expect(res[1]!.score).toBe(25);
   });
   it("views per follower and tiers", () => {
@@ -92,7 +92,7 @@ describe("tendance des vues", () => {
   ) => ({ id, platform, views, publishedAt });
   it("vues par jour depuis la publication", () => {
     expect(viewsPerDay(v("a", 1000, "2026-11-01"), now)).toBeCloseTo(1000 / 6, 5);
-    // vidéo publiée aujourd'hui : jamais de division par 0
+
     expect(viewsPerDay(v("b", 1000, "2026-11-07"), now)).toBe(2000);
   });
   it("flèche montante au-dessus de 1,25× la médiane, descendante sous 0,8×", () => {
@@ -114,9 +114,9 @@ describe("tendance des vues", () => {
       v("i2", 8_000, "2026-11-05", "instagram"),
       v("i3", 6_000, "2026-11-05", "instagram"),
     ];
-    // 20k vues sur Instagram battent la médiane Instagram…
+
     expect(viewsMomentum(pool[3]!, pool, now).momentum).toBe("up");
-    // …même si les TikTok de la recherche en ont 50 fois plus.
+
     expect(viewsMomentum(pool[1]!, pool, now).momentum).toBe("flat");
   });
   it("aucune flèche avec une seule vidéo", () => {

@@ -1,17 +1,14 @@
-// Filtres et détections purs (sans réseau), calculés sur les données Oriane déjà reçues.
 import type { Video } from "./types";
 
 const DAY = 86_400_000;
 const text = (v: Video) =>
   `${v.caption} ${v.transcript} ${v.onScreenText.join(" ")} ${v.hashtags.map((h) => `#${h}`).join(" ")}`.toLowerCase();
-// Mot entier : « #ad » ne doit pas matcher « #adorable », ni « stop » « nonstop ».
+
 const esc = (w: string) => w.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const hit = (t: string, w: string) =>
   new RegExp(`(?<![\\p{L}\\p{N}_])${esc(w)}(?![\\p{L}\\p{N}_])`, "u").test(t);
 const has = (t: string, words: string[]) => words.some((w) => hit(t, w));
 
-/** Shadow reach = pub non déclarée : la vidéo vend une marque (dans ce qui est dit ou écrit à l'écran)
- * sans aucune mention de partenariat ni de marque dans la légende et les hashtags. */
 export type ShadowReach = "cachee" | "declaree" | "aucune";
 const DISCLOSURE = [
   "#ad",
@@ -56,7 +53,7 @@ export function shadowReach(v: Video): ShadowReach {
   const declared = `${v.caption} ${v.hashtags.map((h) => `#${h}`).join(" ")}`.toLowerCase();
   if (has(declared, DISCLOSURE)) return "declaree";
   const spoken = `${v.transcript} ${v.onScreenText.join(" ")}`.toLowerCase();
-  // Marque ou appel à l'achat dans la vidéo, mais rien dans la légende.
+
   const brandInVideo = /@[a-z0-9_.]{3,}|\b[A-Z][a-z]+ ?(?:Paris|Skin|Beauty|Lab|Cosmetics)\b/.test(
     `${v.transcript} ${v.onScreenText.join(" ")}`,
   );
@@ -183,7 +180,7 @@ export function language(v: Video): Lang {
   const words = text(v)
     .replace(/[^\p{L}]+/gu, " ")
     .split(" ");
-  // Mots propres à chaque langue (« la », « que », « es » existent en français et en espagnol).
+
   const count = (ws: string[]) => words.filter((w) => ws.includes(w)).length;
   const s = {
     fr: count([
@@ -259,7 +256,7 @@ export function matches(v: Video, f: Filters, now = Date.now()): boolean {
   if (f.type !== "all" && contentType(v) !== f.type) return false;
   if (f.tone !== "all" && tone(v) !== f.tone) return false;
   if (f.age !== "all" && ageGroup(v) !== f.age) return false;
-  // 0 = inconnu côté Oriane : exclu dès qu'un filtre taille/durée est actif.
+
   const fo = v.creator.followers;
   if (f.creatorSize !== "all" && fo <= 0) return false;
   if (f.creatorSize === "nano" && fo >= 10_000) return false;

@@ -43,7 +43,6 @@ async def health():
     return {"ok": True}
 
 
-# --- Recherche de vidéos (port de searchVideos) ---
 @app.post("/search/videos", response_model=SearchResult, operation_id="searchVideos")
 async def search_videos(data: SearchInput) -> SearchResult:
     db = admin()
@@ -73,11 +72,11 @@ async def search_videos(data: SearchInput) -> SearchResult:
                     for v in videos
                 ]).execute()
             return SearchResult(videos=videos, source="oriane", imageUsed=image_used, imageUnsupported=image_unsupported)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             print("Recherche Oriane échouée:", str(e))
             return SearchResult(videos=[], source="oriane", error="La recherche de vidéos n'a pas abouti.")
 
-    # Mode démo : vidéos épinglées d'abord, sinon les dernières enregistrées.
+
     def read(pinned: bool) -> list[dict]:
         q = db.table("videos").select("data").order("created_at", desc=True).limit(50)
         if pinned:
@@ -90,7 +89,6 @@ async def search_videos(data: SearchInput) -> SearchResult:
     return SearchResult(videos=score_videos(stored)[: data.limit], source="demo")
 
 
-# --- Dernière analyse enregistrée (port de getStoredAnalysis) ---
 @app.post("/analyses/stored", operation_id="getStoredAnalysis", response_model=Optional[Analysis])
 async def stored_analysis(data: StoredAnalysisInput):
     db = admin()
@@ -99,7 +97,6 @@ async def stored_analysis(data: StoredAnalysisInput):
     return (res.data[0]["data"] if res.data else None)
 
 
-# --- Sauvegarde démo (port de saveForDemo) ---
 @app.post("/demo/save", operation_id="saveForDemo", response_model=SaveResult)
 async def save_for_demo(data: SaveForDemoInput):
     if not data.videos or len(data.videos) > 20:
@@ -132,7 +129,6 @@ def _video_facts(v) -> dict:
     }
 
 
-# --- Analyse IA d'une vidéo (port de analyzeVideo) ---
 @app.post("/ai/analyze", operation_id="analyzeVideo", response_model=Analysis)
 async def analyze_video(data: AnalyzeInput):
     import json
@@ -147,7 +143,6 @@ async def analyze_video(data: AnalyzeInput):
     return analysis
 
 
-# --- Génération du prompt publicitaire (port de generateAdPrompt) ---
 @app.post("/ai/generate", operation_id="generateAdPrompt", response_model=GeneratedPrompt)
 async def generate_ad_prompt(data: GenerateInput):
     import json

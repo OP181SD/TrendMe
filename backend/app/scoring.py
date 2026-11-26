@@ -21,7 +21,7 @@ def _fr_num(n: float, max_frac: int) -> str:
     if rounded == int(rounded):
         s = f"{int(rounded):,}".replace(",", " ")
         return s
-    s = f"{rounded:,.{max_frac}f}"  # 1,234.5
+    s = f"{rounded:,.{max_frac}f}"
     int_part, _, frac = s.partition(".")
     frac = frac.rstrip("0")
     int_part = int_part.replace(",", " ")

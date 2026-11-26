@@ -14,13 +14,11 @@ import type {
   Video,
 } from "./types";
 
-/** Erreur de recherche affichable à l'utilisateur, avec proposition de mode démo. */
 export class SearchFailed extends Error {}
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 type ImageType = (typeof IMAGE_TYPES)[number];
 
-/** Image produit utilisable par la recherche visuelle (data URL JPG, PNG ou WebP), sinon null. */
 export function imageForSearch(dataUrl: string): { mediaType: ImageType; base64: string } | null {
   const m = dataUrl.match(/^data:(image\/[a-z]+);base64,(.+)$/);
   if (!m || !(IMAGE_TYPES as readonly string[]).includes(m[1]!)) return null;
@@ -45,7 +43,7 @@ export async function search(
     throw new SearchFailed("Le service de recherche ne répond pas.");
   }
   if (res.error) throw new SearchFailed(res.error);
-  // Le client généré et ./types décrivent la même forme ; on reste sur le vocabulaire ./types côté app.
+
   return {
     videos: res.videos as Video[],
     source: res.source,
@@ -58,15 +56,12 @@ export function getVideo(id: string, extra: Video[] = []): Video | undefined {
   return extra.find((v) => v.id === id);
 }
 
-// L'image n'est pas utile à l'IA : on ne l'envoie pas (requêtes plus légères).
 const lite = (p: Product): Product => ({ ...p, imageUrl: "" });
 
-// Analyses déjà obtenues pendant la session (clé = id de la vidéo).
 const done = new Map<string, Analysis>();
 const pending = new Map<string, Promise<Analysis>>();
 export const getCachedAnalysis = (videoId: string) => done.get(videoId);
 
-/** Mode démo : analyse enregistrée d'abord. Sinon : analyse par l'IA, puis analyse enregistrée en secours. */
 export function analyze(video: Video, product: Product, demo: boolean): Promise<Analysis> {
   const hit = done.get(video.id);
   if (hit) return Promise.resolve(hit);

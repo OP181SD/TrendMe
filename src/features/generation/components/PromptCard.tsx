@@ -19,7 +19,6 @@ interface Props {
   onRegenerate: () => void;
 }
 
-/** Prompt IA en markdown + actions Copier / Régénérer. */
 export function PromptCard({ prompt, regen, copied, onCopy, onRegenerate }: Props) {
   return (
     <Message className="mt-2 block">

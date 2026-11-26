@@ -15,13 +15,12 @@ import { Chip, Field } from "./FormParts";
 
 interface Props {
   form: ProductForm;
-  /** Case « vidéos visuellement proches » affichée seulement si la recherche par image est possible. */
+
   canUseImage: boolean;
   useImage: boolean;
   onUseImage: (v: boolean) => void;
 }
 
-/** Bloc « Plus d'options » : image, détails, marque, ton, format, durée. */
 export function ProductOptions({ form, canUseImage, useImage, onUseImage }: Props) {
   const { product: p, set, setBrand, setStyle, setImageFile } = form;
   return (

@@ -46,7 +46,6 @@ interface BarProps {
   onRun: () => void;
 }
 
-/** Choix de l'outil (mode IA seulement) + bouton Générer. */
 export function GenerateBar({ mode, tool, onTool, loading, disabled, onRun }: BarProps) {
   return (
     <div className="mt-4 flex flex-wrap items-center gap-2 rounded-[1.75rem] border border-dashed bg-card p-5">

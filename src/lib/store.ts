@@ -83,7 +83,7 @@ export function useStore(): State {
 }
 export const activeProduct = (s: State) =>
   s.products.find((p) => p.id === s.activeProductId) ?? null;
-/** Supprime un dossier et tout ce qui s'y rattache (vidéos, inspirations, recherches, générations). */
+
 export function deleteProduct(productId: string) {
   setState((s) => {
     const videos = { ...s.videos };

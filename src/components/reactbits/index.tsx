@@ -1,10 +1,8 @@
-// Composants inspirés de React Bits (TS + Tailwind), réimplémentés légèrement.
 import { motion, useInView, useMotionValue, useSpring, AnimatePresence } from "motion/react";
 import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/* 1. CountUp */
 export function CountUp({
   to,
   decimals = 0,
@@ -43,7 +41,6 @@ export function CountUp({
   );
 }
 
-/* 2. SpotlightCard */
 export function SpotlightCard({
   children,
   className,
@@ -78,7 +75,6 @@ export function SpotlightCard({
   );
 }
 
-/* 3. FadeContent */
 export function FadeContent({
   children,
   delay = 0,
@@ -100,7 +96,6 @@ export function FadeContent({
   );
 }
 
-/* 4. Stepper */
 export function Stepper({
   steps,
   children,
@@ -193,12 +188,10 @@ export function Stepper({
   );
 }
 
-/* 5. ShinyText */
 export function ShinyText({ text, className }: { text: string; className?: string }) {
   return <span className={cn("shiny-text", className)}>{text}</span>;
 }
 
-/* 6. BlurText */
 export function BlurText({
   text,
   className,
@@ -227,7 +220,6 @@ export function BlurText({
   );
 }
 
-/* Aurora discret, en CSS pur (pas de WebGL) — accueil uniquement */
 export function Aurora() {
   return (
     <div

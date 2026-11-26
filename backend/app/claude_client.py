@@ -19,7 +19,7 @@ _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE)
 def _get_client() -> AsyncAnthropic:
     global _client
     if _client is None:
-        _client = AsyncAnthropic()  # lit ANTHROPIC_API_KEY
+        _client = AsyncAnthropic()
     return _client
 
 
@@ -49,7 +49,7 @@ async def claude_json(system: str, user: str, validate: Callable[[object], T]) -
         text = await _call(system, prompt)
         try:
             return validate(_parse_json(text))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             last_err = e
             print("JSON Claude invalide, tentative", attempt + 1)
     raise last_err or ValueError("JSON invalide")

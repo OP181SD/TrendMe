@@ -5,7 +5,6 @@ import { hookText } from "@/lib/format";
 import type { Video } from "@/lib/types";
 import { embedUrl } from "../embed-url";
 
-/** Colonne droite : lecteur intégré, miniature cliquable, ou lien externe si pas d'intégration possible. Monter avec key={v.id}. */
 export function VideoPlayer({ v }: { v: Video }) {
   const [playing, setPlaying] = useState(false);
   const embed = embedUrl(v);

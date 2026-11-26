@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 const CARD = "rounded-[1.75rem] border border-dashed bg-card p-6";
 const LABEL = "text-xs uppercase tracking-wider text-muted-foreground";
 
-/** « À retenir » + engagement moyen des meilleures vs des autres. */
 export function InsightCards({ r }: { r: Insights }) {
   return (
     <div className="mt-8 grid gap-4 md:grid-cols-3">

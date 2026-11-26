@@ -53,7 +53,6 @@ function CodeBlockCode({
 
   const classNames = cn("w-full overflow-x-auto text-[13px] [&>pre]:px-4 [&>pre]:py-4", className);
 
-  // SSR fallback: render plain code if not hydrated yet
   return highlightedHtml ? (
     <div className={classNames} dangerouslySetInnerHTML={{ __html: highlightedHtml }} {...props} />
   ) : (

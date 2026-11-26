@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import type { Product } from "@/lib/types";
 import { blankProduct, exampleProduct } from "../product-presets";
 
-/** État du formulaire produit. Mises à jour fonctionnelles : pas de valeur périmée si le FileReader répond après une saisie. */
 export function useProductForm() {
   const [product, setProduct] = useState<Product>(blankProduct);
   const set = useCallback(

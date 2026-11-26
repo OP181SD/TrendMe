@@ -16,7 +16,7 @@ export function SearchPage() {
   const { product: p, set, setStyle, loadExample } = form;
   const [loading, setLoading] = useState(false);
   const [useImage, setUseImage] = useState(true);
-  // Masquée si Oriane a déjà refusé une image, en mode démo, ou si le format n'est pas JPG/PNG/WebP.
+
   const canUseImage = !s.imageSearchUnsupported && !s.demoMode && !!imageForSearch(p.imageUrl);
 
   async function finish() {

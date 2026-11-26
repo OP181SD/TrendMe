@@ -4,7 +4,6 @@ import type { Product } from "@/lib/types";
 
 const CARD = "rounded-[1.75rem] border border-dashed bg-card p-6";
 
-/** Récapitulatif recherche + marque avant génération. */
 export function RecapCards({ product }: { product: Product }) {
   const { brand, style } = product;
   return (

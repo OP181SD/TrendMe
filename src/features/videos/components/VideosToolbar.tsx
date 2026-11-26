@@ -15,7 +15,6 @@ interface Props {
   onSaveDemo: () => void;
 }
 
-/** Tri, liens Insights/Comparer, enregistrement démo et bouton Générer. */
 export function VideosToolbar({ sort, onSort, pickedCount, saving, onSaveDemo }: Props) {
   return (
     <div className="flex flex-wrap items-center gap-3">

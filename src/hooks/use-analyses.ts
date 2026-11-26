@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { analyze, getCachedAnalysis } from "@/lib/api";
 import type { Analysis, Product, Video } from "@/lib/types";
 
-/** Charge (ou relit) l'analyse de chaque vidéo ; renvoie celles prêtes et le nombre restant. */
 export function useAnalyses(videos: Video[], product: Product | null, demo: boolean) {
   const [map, setMap] = useState<Record<string, Analysis | undefined>>(() =>
     Object.fromEntries(videos.map((v) => [v.id, getCachedAnalysis(v.id)])),
