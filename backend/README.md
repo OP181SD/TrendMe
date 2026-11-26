@@ -42,11 +42,24 @@ Docs auto : http://localhost:8000/docs
 ## Tests
 
 ```bash
-cd backend && python tests/test_pure.py     # ou: pytest
+cd backend && python tests/test_pure.py     # pur (scoring/insights), ou: pytest
 ```
 
-## À faire côté front (non inclus)
+### Smoke test (backend lancé)
 
-Le front appelle encore les server functions TanStack. Pour basculer dessus :
-remplacer les appels `searchVideos(...)` etc. par un `fetch("$API/search/videos", ...)`.
-Les tables Supabase (`searches`, `videos`, `analyses`, `prompts`) sont partagées — aucune migration.
+```bash
+cd backend && .venv/bin/uvicorn app.main:app --port 8000   # terminal 1
+bun run smoke                                               # terminal 2 (ou: bash backend/scripts/smoke.sh)
+```
+
+Vérifie `/health`, `/search/videos` en mode démo, et la validation (422).
+Le check démo a besoin des clés `SUPABASE_*` dans `.env` **et** de lignes
+`videos` enregistrées ; sans ça il renvoie 500 (attendu).
+
+## Front
+
+Le front parle à ce backend via le client Orval généré (`src/lib/api/`),
+enveloppé par la façade `src/lib/api.ts`. Base URL = `VITE_API_URL`.
+Après un changement d'endpoint : `bun run dump:api` puis `bun run gen:api`.
+Les tables Supabase (`searches`, `videos`, `analyses`, `prompts`) sont
+lues/écrites uniquement par ce backend (service-role).

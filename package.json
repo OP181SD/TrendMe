@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dump:api": "cd backend && .venv/bin/python scripts/dump_openapi.py",
-    "gen:api": "orval --config ./orval.config.ts"
+    "gen:api": "orval --config ./orval.config.ts",
+    "backend:dev": "cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000",
+    "smoke": "bash backend/scripts/smoke.sh"
   },
   "overrides": {
     "rolldown": "1.2.1"
