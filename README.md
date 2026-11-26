@@ -1,6 +1,6 @@
-# Hackathon Part 1
+# TrendMe
 
-Avec le connecteur Oriane, cherche 3 vidéos sur "crème anti-âge" (TikTok ou Instagram). Pour chacune, donne-moi : le compte, la plateforme, les vues, le taux d'engagement et la date. Ne crée rien dans le projet, réponds juste dans le chat.
+Recherche de vidéos tendances (Oriane), scoring, analyse et génération de scripts publicitaires. Frontend React/TanStack Start + backend Python/FastAPI (voir `backend/`). Commandes : `make help`.
 
 ## Développement
 
